@@ -1,0 +1,243 @@
+<?php
+namespace Fitin\Controllers;
+use \Ninja\DatabaseTable;
+use \Ninja\Authentication;
+
+class Group {
+    private $usersTable;
+	private $groupsTable;
+
+	// 5/23/21 OG MOD - Added a memberships table to manage the many-to-many relationship between users and groups
+	public function __construct(DatabaseTable $groupsTable, DatabaseTable $usersTable, DatabaseTable $membershipTable, Authentication $authentication) {
+		$this->groupsTable = $groupsTable;
+		$this->usersTable = $usersTable;
+		$this->membershipTable = $membershipTable;
+		$this->authentication = $authentication;
+	}
+
+	// 5/23/21 OG MOD - Lists all groups. 
+	public function list() {
+		// 5/23/21 OG NEW - Get user logged-in user to display an add-group button in the groups page
+		$activeUser = $this->authentication->getUser();
+		$result = $this->groupsTable->findAll();
+
+		$groups = [];
+		foreach ($result as $group) {
+			$user = $this->usersTable->findById($group['userId']);
+			// 5/23/21 OG NEW - Goes through each group and gets the the user ids based on the current group id
+			$memberships = $this->membershipTable->find('groupid', $group['id']);
+
+			$member = null;
+
+			// 5/23/21 OG NEW - for each membership if the membership userid is the same as that of the current user
+			//					then it sets to the member value to true for template displaying purposes
+			foreach ($memberships as $membership) {
+				if ($activeUser) {
+					if ( $membership['userid'] == $activeUser['id'] ) {
+						$member = true;
+					}
+				}
+			}
+
+			$groups[] = [
+				'id' => $group['id'],
+				'name' => $group['name'],
+				'date' => $group['date'],
+				'userId' => $group['userId'],
+				'firstname' => $user['firstname'],
+                'lastname' => $user['lastname'],
+				'email' => $user['email'],
+				'userId' => $user['id'],
+				'member' => $member // Here each group states if the current user is a memeber
+			];
+
+		}
+
+		$title = 'Groups';
+
+		$totalGroups = $this->groupsTable->total();
+
+		$user = $this->authentication->getUser();
+
+		return ['template' => 'groups.html.php', 
+				'title' => $title, 
+				'variables' => [
+						'totalGroups' => $totalGroups,
+						'groups' => $groups,
+						'userId' => $user['id'] ?? null,
+						'permissions' => $user['permissions'] ?? null,
+						'loggedIn' => $this->authentication->isLoggedIn()
+					]
+				];
+	}
+
+	// 5/23/21 OG NEW - Joins a user to a group
+    public function adminGroupList() {
+		// 5/23/21 OG NEW - Find all groups
+		$result = $this->groupsTable->findAll();
+
+		// 5/23/21 OG NEW - Get active user
+		$activeUser = $this->authentication->getUser();
+		$totalGroups = 0;
+
+		// 5/23/21 OG NEW - for each group build the groups array that will be displayed
+		$groups = [];
+		foreach ($result as $group) {
+			$user = $this->usersTable->findById($group['userId']);
+
+			$groups[] = [
+				'id' => $group['id'],
+				'name' => $group['name'],
+				'date' => $group['date'],
+				'userId' => $group['userId'],
+				'firstname' => $user['firstname'],
+                'lastname' => $user['lastname'],
+				'email' => $user['email'],
+				'userId' => $user['id']
+			];
+			
+			// 5/23/21 OG NEW - Count the groups that belong to the active user
+			if ($activeUser['id'] == $group['userId']) {
+				$totalGroups++;
+			}
+		}
+
+		// 5/23/21 OG NEW - If active user has admin privilages get the total of groups
+		if ($activeUser['permissions'] > 2) {
+			$totalGroups = $this->groupsTable->total();
+		}
+
+		$title = 'Groups';
+
+		return ['template' => 'admin_groups.html.php', 
+				'title' => $title, 
+				'variables' => [
+						'totalGroups' => $totalGroups,
+						'groups' => $groups,
+						'userId' => $activeUser['id'] ?? null,
+						'permissions' => $activeUser['permissions'] ?? null,
+						'loggedIn' => $this->authentication->isLoggedIn()
+					]
+				];
+	}
+
+
+
+	
+    public function home() {
+		$title = 'Home';
+
+		return ['template' => 'home.html.php', 'title' => $title];
+	}
+
+
+	public function about() {
+		$title = 'About';
+
+		return ['template' => 'about.html.php', 'title' => $title];
+	}
+
+
+	public function location() {
+		$title = 'Location';
+
+		return ['template' => 'location.html.php', 'title' => $title];
+	}
+
+	// 5/23/21 OG MOD - Same as CH11. 
+	public function saveEdit() {
+		$activeUser = $this->authentication->getUser();
+
+		if (isset($_GET['id'])) {
+			$group = $this->groupsTable->findById($_GET['id']);
+
+			if ($group['userId'] != $activeUser['id']) {
+				return;
+			}
+		}
+
+		$group = $_POST['group'];
+		$group['date'] = new \DateTime();
+		$group['userId'] = $activeUser['id'];
+
+		$this->groupsTable->save($group);
+		//header('location: /group/list'); 5/25/18 JG DEL1L  org
+		header('location: index.php?admin/groups');  //5/25/18 JG NEW1L  
+	}
+
+
+	// 5/23/21 OG MOD - Same as CH11. This method is called on either a POST and GET route.  
+	//				  - POST request provides a GET value coming from the action value
+	//				  - GET request either comes from the POST request or a link with no group id 
+	public function edit() {
+		// Get active user
+		$activeUser = $this->authentication->getUser();
+
+		// if there is a group id provided then find the group to display in the edit group form
+		// else it will display an empty form
+		if (isset($_GET['id'])) {
+			$group = $this->groupsTable->findById($_GET['id']);
+		}
+
+		$title = 'Edit group';
+
+		return ['template' => 'editgroup.html.php',
+				'title' => $title,
+				'variables' => [
+						'group' => $group ?? null,
+						'userId' => $activeUser['id'] ?? null,
+						'permissions' => $activeUser['permissions']
+					]
+				];
+	}
+
+
+	// 5/23/21 OG NEW - This is the POST route that creates the many-to-many relationship between
+	public function delete() {
+		// 5/23/21 OG NEW - Get active user
+		$activeUser = $this->authentication->getUser();
+		// 5/23/21 OG NEW - Find the group that needs to be deleted
+		$group = $this->groupsTable->findById($_POST['id']);
+		// 5/23/21 OG NEW - If the active user is not the creator and does not have rights then do not proceed to delete
+		if ($group['userId'] != $activeUser['id'] && $activeUser['permissions'] < 3) {
+			return;
+		}
+		
+		// 5/23/21 OG NEW - else delete the group and redirect to admin groups page
+		$this->groupsTable->delete($_POST['id']);
+		header('location: index.php?admin/groups');  // 5/25/18 JG NEW1L  		
+	}
+
+	// 5/23/21 OG NEW - Joins a user to a group
+	public function join() {
+		// Get current active user
+		$activeUser = $this->authentication->getUser();
+		// Get the group id from the groups page
+		$group = $_POST['id'];
+
+		// Set the memberships array that will build the relationship between the group and the user
+		$membership['userid'] = $activeUser['id'];
+		$membership['groupid'] = $group;
+
+		// save it and redirect to group list
+		$this->membershipTable->save($membership);
+
+		
+
+		echo header('location: index.php?group/list');
+	}
+
+	// 5/23/21 OG NEW - Removes the retalationship between the user and the group
+	public function leave() {
+		// Get current active user
+		$activeUser = $this->authentication->getUser();
+
+		// Get the group that was clicked on
+		$group = $this->groupsTable->findById($_POST['id']);
+
+		// Delete the relationship from the membership table and redirect to group list
+		$this->membershipTable->deleteFromLookup('groupid', 'userid', $group['id'], $activeUser['id']);
+
+		echo header('location: index.php?group/list');
+	}
+}
