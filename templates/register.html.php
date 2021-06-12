@@ -1,3 +1,4 @@
+<!-- REGISTER.HTLM.PHP -->
 <div id="login" class="auth">
 	<div class="header">
 		<a href="index.php"><img src="images/logo.svg" alt="logo" width="50px" height="50px"></a>
