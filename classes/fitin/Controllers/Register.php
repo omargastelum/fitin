@@ -26,57 +26,74 @@ class Register {
 
 	public function registerUser() {
 		$user = $_POST['user'];
-		print($user['firstname']);
 
-		//Assume the data is valid to begin with
+		// 2021-06-13 OG NEW - Assume the data is valid to begin with 
 		$valid = true;
 		$errors = [];
 
-		//But if any of the fields have been left blank, set $valid to false
+		// 2021-06-13 OG NEW - But if any of the fields have been left blank, set $valid to false 
 		if (empty($user['firstname'])) {
 			$valid = false;
-			$errors[] = 'First name cannot be blank';
+			$errors['firstname'] = 'First name cannot be blank';
 		}
 
 		if (empty($user['lastname'])) {
 			$valid = false;
-			$errors[] = 'Last name cannot be blank';
+			$errors['lastname'] = 'Last name cannot be blank';
 		}
 
 		if (empty($user['email'])) {
 			$valid = false;
-			$errors[] = 'Email cannot be blank';
+			$errors['email'] = 'Email cannot be blank';
 		}
 		else if (filter_var($user['email'], FILTER_VALIDATE_EMAIL) == false) {
 			$valid = false;
-			$errors[] = 'Invalid email address';
+			$errors['email'] = 'Invalid email address';
 		}
-		else { //if the email is not blank and valid:
-			//convert the email to lowercase
+		else { // if the email is not blank and valid:
+			// convert the email to lowercase
 			$user['email'] = strtolower($user['email']);
 
-			//search for the lowercase version of `$user['email']`
+			// search for the lowercase version of `$user['email']`
 			if (count($this->usersTable->find('email', $user['email'])) > 0) {
 				$valid = false;
-				$errors[] = 'That email address is already registered';
+				$errors['email'] = 'That email address is already registered';
 			}
 		}
 
-		// 5/22/21 OG NEW 1L - Default value for user permissions
-		$user['permissions'] = 1;
-
-		// 5/23/21 OG NEW - set 1 for female and 2 for male
-		if ($_POST['gender'] == 'female') {
-			$user['gender'] = 1;
-		} else {
-			$user['gender'] = 2;
+		if (empty($user['zipcode'])) {
+			$valid = false;
+			$errors['zipcode'] = 'Zip code cannot be empty';
 		}
 
+		print($user['zipcode']);
 
 		if (empty($user['password'])) {
 			$valid = false;
-			$errors[] = 'Password cannot be blank';
+			$errors['password'] = 'Password cannot be blank';
 		}
+
+		// 2021-06-13 OG NEW - Create variables for image handling 
+		$target_dir = 'images/users/';
+		$file_name = $_FILES['userImage']['name'];
+		$target_file = $target_dir . basename($file_name);
+		
+		// 2021-06-13 OG NEW - If an image file is set 
+		if (!empty($file_name)) {
+			// 2021-06-13 OG NEW - Check if the file exists 
+			if (file_exists($target_file)) {
+				$errors['userImage'] = "Sorry, file already exists.";
+				$valid = false;
+			} else {
+				// 2021-06-13 OG NEW - if it does not then upload the image and set name for storage 
+				move_uploaded_file($_FILES['userImage']['tmp_name'], $target_file);
+				$user['image'] = $file_name;
+			}
+		}
+		
+
+		// 5/22/21 OG NEW 1L - Default value for user permissions
+		$user['permissions'] = 1;
 
 		//If $valid is still true, no fields were blank and the data can be added
 		if ($valid == true) {
@@ -88,7 +105,7 @@ class Register {
 			$this->usersTable->save($user);
 
             //header('Location: /user/success'); //5/25/18 JG DEL1L  org
-            header('Location: index.php?user/success'); //5/25/18 JG NEW1L  
+            header('Location: index.php?login'); //5/25/18 JG NEW1L  
 
 
 		}

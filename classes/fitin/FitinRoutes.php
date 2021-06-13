@@ -38,7 +38,8 @@ class FitinRoutes implements \Ninja\Routes {
 				'GET' => [
 					'controller' => $userController,
 					'action' => 'success'
-				]
+				],
+				'template' => 'registersuccess.html.php'
 			],
 			'group/save' => [
 				'POST' => [
@@ -106,7 +107,8 @@ class FitinRoutes implements \Ninja\Routes {
 				'POST' => [
 					'controller' => $loginController,
 					'action' => 'processLogin'
-				]
+				],
+				'template' => 'form_layout.html.php'
 			],
 			// 5/23/21 OG NEW - This is the POST route that creates the many-to-many relationship between
 			// 					the user and the group. It calls the join method in the group controller.

@@ -6,7 +6,7 @@
 	</div>
 	<div class="nav">
 		<div class="nav-item">
-			<a href="login.html">Login</a>
+			<a href="index.php?login">Login</a>
 		</div>
 		<div class="nav-item active">
 			<p>Register</p>
@@ -14,41 +14,33 @@
 	</div>
 	<div class="body">
 		<div class="container">
-			<form>
+			<form action="index.php?user/register" method="post" enctype="multipart/form-data">
 				<div class="form-group">
-					<label for="firstname">Firstname</label>
-					<input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter first name">
+					<label for="firstname">Firstname <span class="alert"><?=$errors['firstname'] ?? ''?></span></label>
+					<input type="text" class="form-control" id="firstname" name="user[firstname]" placeholder="Enter first name">
 				</div>
 				<div class="form-group">
-					<label for="lastname">Lastname</label>
-					<input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter last name">
+					<label for="lastname">Lastname <span class="alert"><?=$errors['lastname'] ?? ''?></span></label>
+					<input type="text" class="form-control" id="lastname" name="user[lastname]" placeholder="Enter last name">
 				</div>
 				<div class="form-group">
-					<label for="email">Email address</label>
-					<input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email">
-					<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+					<label for="email">Email address <span class="alert"><?=$errors['email'] ?? ''?></span></label>
+					<input type="email" class="form-control" id="email" name="user[email]" placeholder="Enter email">
 				</div>
 				<div class="form-group">
-					<label for="password">Password</label>
-					<input type="password" class="form-control" id="password" name="password" placeholder="Password">
+					<label for="password">Password <span class="alert"><?=$errors['password'] ?? ''?></span></label>
+					<input type="password" class="form-control" id="password" name="user[password]" placeholder="Password">
 				</div>
 				<div class="form-group">
-					<label for="street">Street</label>
-					<input type="text" class="form-control" id="street" name="street" placeholder="Enter Street">
+					<label for="zipcode">Zipcode <span class="alert"><?=$errors['zipcode'] ?? ''?></span></label>
+					<input type="text" class="form-control" id="zipcode" name="user[zipcode]" placeholder="Enter Zip Code">
 				</div>
-				<div class="form-group">
-					<label for="city">City</label>
-					<input type="text" class="form-control" id="city" name="city" placeholder="Enter City">
+				<div class="custom-file">
+					<input type="file" class="custom-file-input" name="userImage" id="customFile" accept=".jpg">
+					<label id="customFileLabel" class="custom-file-label" for="customFile">Profile Image</label>
+					<span class="alert"><?=$errors['userImage'] ?? ''?></span>
 				</div>
-				<div class="form-group">
-					<label for="country">Country</label>
-					<input type="text" class="form-control" id="country" name="country" placeholder="Enter Country">
-				</div>
-				<div class="form-group">
-					<label for="zipcode">Street</label>
-					<input type="text" class="form-control" id="street" name="street" placeholder="Enter Street">
-				</div>
-				<button type="submit" class="btn btn-primary">Login</button>
+				<button type="submit" class="btn btn-primary">Sign Up</button>
 			</form>
 		</div>
 	</div>
