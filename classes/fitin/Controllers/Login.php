@@ -15,7 +15,7 @@ class Login {
 	public function processLogin() {
 		if ($this->authentication->login($_POST['email'], $_POST['password'])) {
 			//header('Location: /login/success'); //5/25/18 JG DEL1L  org
-            header('Location: index.php?login/success'); //5/25/18 JG NEW1L  
+            header('Location: index.php'); //5/25/18 JG NEW1L  
 			
 		}
 		else {
@@ -39,6 +39,6 @@ class Login {
 	public function logout() {
 	    unset($_SESSION);  //5/26/18 JG org DEL1l - it doesn't delete all session info
 		session_destroy(); //5/26/18 JG NEW1l  to kill all session information
-		return ['template' => 'logout.html.php', 'title' => 'You have been logged out'];
+		header('Location: index.php?login');
 	}
 }

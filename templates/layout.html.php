@@ -21,9 +21,13 @@
                 <i class="fa fa-bars"></i>
             </a>
             <ul id="nav-list">
-                <li><a href="#"><i class="fas fa-user"></i> Alicia Gastelum</a></li>
-                <li><a href="login.html">Login</a></li>
-                <li><a href="index.php?user/register">Signup</a></li>
+                <?php if ($loggedIn): ?>
+                    <li><a href="index.php?logout">Logout</a></li>
+                    <li><a href="#"><i class="fas fa-user"></i> <?=$user['firstname'] . ' ' . $user['lastname'] ?></a></li>
+                <?php else: ?>
+                    <li><a href="index.php?login">Login</a></li>
+                    <li><a href="index.php?user/register">Signup</a></li>
+                <?php endif; ?>
             </ul>
         </div>
         <div class="nav-links">
@@ -32,17 +36,19 @@
                     <a class="nav-link" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="groups.html">Groups</a>
+                    <a class="nav-link" href="index.php?groups">Groups</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="about.html">About</a>
+                    <a class="nav-link" href="index.php?about">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact</a>
+                    <a class="nav-link" href="index.php?contact">Contact</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="index.php?admin">Admin</a>
-                </li>
+                <?php if ($loggedIn && $user['permissions'] > 1): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php?admin">Admin</a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
     </nav>
