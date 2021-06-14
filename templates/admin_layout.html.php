@@ -18,9 +18,9 @@
             <a href="index.php"><img src="images/logo.svg" alt=""></a>
         </div>
         <div class="user">
-            <img src="images/users/jemain-clement.jpg" alt="">
-            <h2>Jemain Clement</h2>
-            <p class="dim">jemain.clement@fitin.com</p>
+            <img src="images/users/<?=$user['image']?>" alt="">
+            <h2><?=$user['firstname'] . ' ' . $user['lastname']?></h2>
+            <p class="dim"><?=$user['email']?></p>
         </div>
         <div class="dashboard">
             <h2>Navigation</h2>
@@ -36,12 +36,16 @@
         <div class="dashboard">
             <h2>Dashboard</h2>
             <ul>
-                <li><a href="admin_groups.html"><i class="fa fa-users" aria-hidden="true"></i>
-                    Groups</a></li>
-                <li><a href="admin_activities.html"><i class="fa fa-calendar-o" aria-hidden="true"></i>
-                    Activities</a></li>
-                <li><a href="admin_users.html"><i class="fa fa-user-plus" aria-hidden="true"></i>
-                    Users</a></li>
+                <?php if ($user['permissions'] > 1): ?>
+                    <li><a href="admin_groups.html"><i class="fa fa-users" aria-hidden="true"></i>
+                        Groups</a></li>
+                    <li><a href="admin_activities.html"><i class="fa fa-calendar-o" aria-hidden="true"></i>
+                        Activities</a></li>
+                <?php endif; ?>
+                <?php if ($user['permissions'] > 2): ?>
+                    <li><a href="admin_users.html"><i class="fa fa-user-plus" aria-hidden="true"></i>
+                        Users</a></li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>

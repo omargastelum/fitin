@@ -85,7 +85,8 @@ class FitinRoutes implements \Ninja\Routes {
 				'GET' => [
 					'controller' => $loginController,
 					'action' => 'error'
-				]
+				],
+				'template' => 'form_layout.html.php'
 			],
 			'login/success' => [
 				'GET' => [
@@ -187,7 +188,9 @@ class FitinRoutes implements \Ninja\Routes {
 					'controller' => $adminHomeController,
 					'action' => 'show'
 				],
-				'template' => 'admin_layout.html.php'
+				'template' => 'admin_layout.html.php',
+				'login' => true,
+				'admin' => true
 			],
 			'about' => [
 				'GET' => [

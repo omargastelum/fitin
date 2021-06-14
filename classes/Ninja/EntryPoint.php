@@ -38,8 +38,9 @@ class EntryPoint {
 		if (isset($routes[$this->route]['login']) && isset($routes[$this->route]['login']) && !$authentication->isLoggedIn()) {
 			//header('location: /login/error');  // 5/25/18 JG DEL1L  org
 			header('location: index.php?login/error'); // 5/25/18 JG NEW1L  org
-		}
-		else {
+		} else if (isset($routes[$this->route]['admin']) && ($authentication->getUser()['permissions'] < 2)) {
+			header('location: index.php?login/error');
+		} else {
 			$controller = $routes[$this->route][$this->method]['controller'];
 			$action = $routes[$this->route][$this->method]['action'];
 			$template = $routes[$this->route]['template'];
