@@ -43,7 +43,7 @@
                         Activities</a></li>
                 <?php endif; ?>
                 <?php if ($user['permissions'] > 2): ?>
-                    <li><a href="admin_users.html"><i class="fa fa-user-plus" aria-hidden="true"></i>
+                    <li><a href="index.php?admin/users"><i class="fa fa-user-plus" aria-hidden="true"></i>
                         Users</a></li>
                 <?php endif; ?>
             </ul>
@@ -65,10 +65,12 @@
     ======================================================================= -->
     <script src="https://kit.fontawesome.com/f4a104139c.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/script.js"></script>
     <script src="js/admin.js"></script>
+    <script src="js/form_submission.js"></script>
     <!-- <script src="js/map.js"></script> -->
 </body>
 </html>

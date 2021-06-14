@@ -132,6 +132,7 @@ class Register {
 				'firstname' => $user['firstname'],
                 'lastname' => $user['lastname'],
 				'email' => $user['email'],
+				'zipcode' => $user['zipcode'],
 				'permissions' => $user['permissions']
 			];
 
@@ -180,6 +181,7 @@ class Register {
 				];
 	}
 
+
 	public function saveEdit() {
 		$activeUser = $this->authentication->getUser();
 		$user = $_POST['user'];
@@ -220,6 +222,7 @@ class Register {
 				'firstname' => $user['firstname'],
 				'lastname' => $user['lastname'],
 				'email' => $user['email'],
+				'zipcode' => $user['zipcode'],
 				'permissions' => $user['permissions'] ?? $activeUser['permissions']
 			];
 			//When submitted, the $user variable now contains a lowercase value for email
@@ -255,24 +258,22 @@ class Register {
 	public function delete() {
 
 		$activeUser = $this->authentication->getUser();
-		print( $activeUser['firstname'] );
-
-		$user = $this->usersTable->findById($_POST['id']);
-
-		$groups = $this->groupsTable->find('userId', $user['id']);
-
+		// 2021-06-14 OG NEW - return if active user does not have permission to edit/delete users
 		if ($activeUser['permissions'] < 3) {
 			return;
 		}
+		print($_POST['id']);
 
+		$user = $this->usersTable->findById($_POST['id']);
+		$groups = $this->groupsTable->find('userId', $user['id']);
+		// 2021-06-14 OG NEW - delete each group created by this user
 		foreach ($groups as $group) {
-			$this->groupsTable->deleteBy('userId', $_POST['id']);
+			$this->groupsTable->deleteBy('userId', $user['id']);
 		}
-		
-
+		// 2021-06-14 OG NEW - Delete user 
 		$this->usersTable->delete($_POST['id']);
         //header('location: /group/list'); 5/25/18 JG DEL1L  org
-		header('location: index.php?admin/users');  // 5/25/18 JG NEW1L  		
+		echo header('location: index.php?admin/users');  // 5/25/18 JG NEW1L  		
 	}
 
 

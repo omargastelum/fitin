@@ -38,6 +38,7 @@ class EntryPoint {
 		if (isset($routes[$this->route]['login']) && isset($routes[$this->route]['login']) && !$authentication->isLoggedIn()) {
 			//header('location: /login/error');  // 5/25/18 JG DEL1L  org
 			header('location: index.php?login/error'); // 5/25/18 JG NEW1L  org
+		// 2021-06-14 OG NEW - Check if the user can access the admin area and display error accordingly  
 		} else if (isset($routes[$this->route]['admin']) && ($authentication->getUser()['permissions'] < 2)) {
 			header('location: index.php?login/error');
 		} else {

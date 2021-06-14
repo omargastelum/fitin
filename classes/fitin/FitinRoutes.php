@@ -18,6 +18,7 @@ class FitinRoutes implements \Ninja\Routes {
     public function getRoutes(): array {
 		$homeController = new \Fitin\Controllers\Home();
 		$adminHomeController = new \Fitin\Controllers\Admin\Home();
+		$adminUserController = new \Fitin\Controllers\Admin\User($this->usersTable);
 		$groupController = new \Fitin\Controllers\Group($this->groupsTable, $this->usersTable, $this->membershipsTable, $this->authentication);
 		$userController = new \Fitin\Controllers\Register($this->usersTable, $this->groupsTable, $this->membershipsTable, $this->authentication);
 		$loginController = new \Fitin\Controllers\Login($this->authentication);
@@ -143,7 +144,9 @@ class FitinRoutes implements \Ninja\Routes {
 					'controller' => $userController,
 					'action' => 'list'
 				],
-				'login' => true
+				'template' => 'admin_layout.html.php',
+				'login' => true,
+				'admin' => true
 			],
 			'user/save' => [
 				'POST' => [
@@ -159,11 +162,11 @@ class FitinRoutes implements \Ninja\Routes {
 			],
 			'user/edit' => [
 				'POST' => [
-					'controller' => $userController,
+					'controller' => $adminUserController,
 					'action' => 'edit'
 				],
 				'GET' => [
-					'controller' => $userController,
+					'controller' => $adminUserController,
 					'action' => 'edit'
 				],
 				'login' => true
