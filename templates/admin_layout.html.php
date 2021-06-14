@@ -15,7 +15,7 @@
 <body>
     <div id="side-nav" class="hide">
         <div class="header">
-            <img src="images/logo.svg" alt="">
+            <a href="index.php"><img src="images/logo.svg" alt=""></a>
         </div>
         <div class="user">
             <img src="images/users/jemain-clement.jpg" alt="">
