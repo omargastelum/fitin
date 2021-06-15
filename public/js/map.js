@@ -46,7 +46,7 @@ function addMarker(details) {
     var marker = new google.maps.Marker({
         position: details.position,
         map: details.map,
-        icon: '../images/map_markers/'+ details.icon +'.png'
+        icon: 'images/map_markers/'+ details.icon +'.png'
     });
 
     var infoWindow = new google.maps.InfoWindow({

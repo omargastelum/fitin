@@ -25,6 +25,9 @@ class FitinRoutes implements \Ninja\Routes {
 		$loginController = new \Fitin\Controllers\Login($this->authentication);
 
 		$routes = [
+			// ==========================================================================
+			// REGISTER USER
+			// ==========================================================================
 			'user/register' => [
 				'GET' => [
 					'controller' => $userController,
@@ -36,12 +39,41 @@ class FitinRoutes implements \Ninja\Routes {
 				],
 				'template' => 'form_layout.html.php'
 			],
+			// 2021-06-15 OG NEW - **********NOT USED 
 			'user/success' => [
 				'GET' => [
 					'controller' => $userController,
 					'action' => 'success'
 				],
 				'template' => 'registersuccess.html.php'
+			],
+
+			// ==========================================================================
+			// ADMIN
+			// ==========================================================================
+			'admin' => [
+				'GET' => [
+					'controller' => $adminHomeController,
+					'action' => 'show'
+				],
+				'template' => 'admin_layout.html.php',
+				'login' => true,
+				'admin' => true
+			],
+
+			// ==========================================================================
+			// ADMIN - GROUPS
+			// ==========================================================================
+			// 5/23/21 OG NEW - This is the GET route that displays the admin groups list
+			//					Access requieres the user to be logged in
+			'admin/groups' => [
+				'GET' => [
+					'controller' => $adminGroupController,
+					'action' => 'list'
+				],
+				'template' => 'admin_layout.html.php',
+				'login' => true,
+				'admin' => true
 			],
 			'group/create' => [
 				'POST' => [
@@ -75,76 +107,16 @@ class FitinRoutes implements \Ninja\Routes {
 			// 5/23/21 OG MOD - changed from joke/delete to group/delete, and the controller to groupController
 			'group/delete' => [
 				'POST' => [
-					'controller' => $groupController,
+					'controller' => $adminGroupController,
 					'action' => 'delete'
 				],
-				'login' => true
-			],
-			'group/list' => [
-				'GET' => [
-					'controller' => $groupController,
-					'action' => 'list'
-				]
-			],
-			'login/error' => [
-				'GET' => [
-					'controller' => $loginController,
-					'action' => 'error'
-				],
-				'template' => 'form_layout.html.php'
-			],
-			'login/success' => [
-				'GET' => [
-					'controller' => $loginController,
-					'action' => 'success'
-				]
-			],
-			'logout' => [
-				'GET' => [
-					'controller' => $loginController,
-					'action' => 'logout'
-				]
-			],
-			'login' => [
-				'GET' => [
-					'controller' => $loginController,
-					'action' => 'loginForm'
-				],
-				'POST' => [
-					'controller' => $loginController,
-					'action' => 'processLogin'
-				],
-				'template' => 'form_layout.html.php'
-			],
-			// 5/23/21 OG NEW - This is the POST route that creates the many-to-many relationship between
-			// 					the user and the group. It calls the join method in the group controller.
-			'group/join' => [
-				'POST' => [
-					'controller' => $groupController,
-					'action' => 'join'
-				],
-				'login' => true
-			],
-			// 5/23/21 OG NEW - This is the POST route that breaks the many-to-many relationship between
-			// 					the user and the group. It calls the leave method in the group controller.
-			'group/leave' => [
-				'POST' => [
-					'controller' => $groupController,
-					'action' => 'leave'
-				],
-				'login' => true
-			],
-			// 5/23/21 OG NEW - This is the GET route that displays the admin groups list
-			//					Access requieres the user to be logged in
-			'admin/groups' => [
-				'GET' => [
-					'controller' => $adminGroupController,
-					'action' => 'list'
-				],
-				'template' => 'admin_layout.html.php',
 				'login' => true,
 				'admin' => true
 			],
+
+			// ==========================================================================
+			// ADMIN - USERS
+			// ==========================================================================
 			'admin/users' => [
 				'GET' => [
 					'controller' => $adminUserController,
@@ -186,6 +158,71 @@ class FitinRoutes implements \Ninja\Routes {
 				'login' => true,
 				'admin' => true
 			],
+			
+			// ==========================================================================
+			// LOGIN
+			// ==========================================================================
+			'login/error' => [
+				'GET' => [
+					'controller' => $loginController,
+					'action' => 'error'
+				],
+				'template' => 'form_layout.html.php'
+			],
+			'login/success' => [
+				'GET' => [
+					'controller' => $loginController,
+					'action' => 'success'
+				]
+			],
+			'logout' => [
+				'GET' => [
+					'controller' => $loginController,
+					'action' => 'logout'
+				]
+			],
+			'login' => [
+				'GET' => [
+					'controller' => $loginController,
+					'action' => 'loginForm'
+				],
+				'POST' => [
+					'controller' => $loginController,
+					'action' => 'processLogin'
+				],
+				'template' => 'form_layout.html.php'
+			],
+			
+			// ==========================================================================
+			// MAIN - GROUPS
+			// ==========================================================================
+			'group/list' => [
+				'GET' => [
+					'controller' => $groupController,
+					'action' => 'list'
+				],
+				'template' => 'layout.html.php'
+			],
+			// 5/23/21 OG NEW - This is the POST route that creates the many-to-many relationship between
+			// 					the user and the group. It calls the join method in the group controller.
+			'group/join' => [
+				'POST' => [
+					'controller' => $groupController,
+					'action' => 'join'
+				],
+				'login' => true
+			],
+			// 5/23/21 OG NEW - This is the POST route that breaks the many-to-many relationship between
+			// 					the user and the group. It calls the leave method in the group controller.
+			'group/leave' => [
+				'POST' => [
+					'controller' => $groupController,
+					'action' => 'leave'
+				],
+				'login' => true
+			],
+			
+			
 			'admin/profile' => [
 				'GET' => [
 					'controller' => $userController,
@@ -193,15 +230,10 @@ class FitinRoutes implements \Ninja\Routes {
 				],
 				'login' => true
 			],
-			'admin' => [
-				'GET' => [
-					'controller' => $adminHomeController,
-					'action' => 'show'
-				],
-				'template' => 'admin_layout.html.php',
-				'login' => true,
-				'admin' => true
-			],
+			
+			// ==========================================================================
+			// STATIC PAGES
+			// ==========================================================================
 			'about' => [
 				'GET' => [
 					'controller' => $groupController,

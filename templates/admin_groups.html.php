@@ -13,6 +13,7 @@
                     <th scope="col">Action</th>
                     <th scope="col">Name</th>
                     <th scope="col">description</th>
+                    <th scope="col">Created By</th>
                     <th scope="col">Street</th>
                     <th scope="col">City</th>
                     <th scope="col">State</th>
@@ -31,6 +32,7 @@
                         <td scope="row"><button id="deleteBtn-<?=$group['id']?>" class="deleteBtn btn btn-danger btn-sm">Delete</button></td>
                         <td><div contenteditable="true" class="edit" id="name-<?=$group['id']?>"><?=$group['name']?></div></td>
                         <td><div contenteditable="true" class="edit" id="description-<?=$group['id']?>"><?=$group['description']?></div></th>
+                        <td><div><?=$group['creator']?></div></th>
                         <td><div contenteditable="true" class="edit" id="street-<?=$group['id']?>"><?=$group['street']?></div></th>
                         <td><div contenteditable="true" class="edit" id="city-<?=$group['id']?>"><?=$group['city']?></div></th>
                         <td><div contenteditable="true" class="edit" id="state-<?=$group['id']?>"><?=$group['state']?></div></th>

@@ -13,9 +13,12 @@
 
         public function list() {
             $result = $this->groupsTable->findAll();
+            $activeUser = $this->authentication->getUser();
+            $totalGroups = 0;
     
             $groups = [];
             foreach ($result as $group) {
+                $user = $this->usersTable->findById($group['userId']);
     
                 $groups[] = [
                     'id' => $group['id'],
@@ -26,14 +29,23 @@
                     'state' => $group['state'],
                     'country' => $group['country'],
                     'zipcode' => $group['zipcode'],
-                    'date' => $group['date']
+                    'date' => $group['date'],
+                    'creator' => $user['firstname']. ' ' .$user['lastname']
                 ];
-    
+
+                // 5/23/21 OG NEW - Count the groups that belong to the active user
+                if ($activeUser['id'] == $group['userId']) {
+                    $totalGroups++;
+                }
+        
             }
     
             $title = 'Groups';
     
-            $totalGroups = $this->groupsTable->total();
+            // 5/23/21 OG NEW - If active user has admin privilages get the total of groups
+            if ($activeUser['permissions'] > 2) {
+                $totalGroups = $this->groupsTable->total();
+            }
     
             $user = $this->authentication->getUser();
     
@@ -89,5 +101,20 @@
             ];
     
             $this->groupsTable->save($updatedGroup);
+        }
+
+        public function delete() {
+            // 5/23/21 OG NEW - Get active user
+            $activeUser = $this->authentication->getUser();
+            // 5/23/21 OG NEW - Find the group that needs to be deleted
+            $group = $this->groupsTable->findById($_POST['id']);
+            // 5/23/21 OG NEW - If the active user is not the creator and does not have rights then do not proceed to delete
+            if ($group['userId'] != $activeUser['id'] && $activeUser['permissions'] < 3) {
+                return;
+            }
+            
+            // 5/23/21 OG NEW - else delete the group and redirect to admin groups page
+            $this->groupsTable->delete($_POST['id']);
+            header('location: index.php?admin/groups');  // 5/25/18 JG NEW1L  		
         }
     }
