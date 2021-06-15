@@ -37,9 +37,9 @@
             <h2>Dashboard</h2>
             <ul>
                 <?php if ($user['permissions'] > 1): ?>
-                    <li><a href="admin_groups.html"><i class="fa fa-users" aria-hidden="true"></i>
+                    <li><a href="index.php?admin/groups"><i class="fa fa-users" aria-hidden="true"></i>
                         Groups</a></li>
-                    <li><a href="admin_activities.html"><i class="fa fa-calendar-o" aria-hidden="true"></i>
+                    <li><a href="index.php?admin/activities"><i class="fa fa-calendar-o" aria-hidden="true"></i>
                         Activities</a></li>
                 <?php endif; ?>
                 <?php if ($user['permissions'] > 2): ?>

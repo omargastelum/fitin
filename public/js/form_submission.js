@@ -1,5 +1,7 @@
 $(document).ready(function() {
     var initialValue = '';
+    var type = $('#type').val();
+    console.log(type);
     $('.edit').click(function() {
         $(this).addClass('editMode');
     });
@@ -14,10 +16,12 @@ $(document).ready(function() {
         var field = $(this).attr('id').split('-')[0];
         var id = $(this).attr('id').split('-')[1];
 
+        console.log(field);
+
         if (value != '') {
 
             $.ajax({
-                url: 'index.php?user/edit',
+                url: 'index.php?'+ type +'/edit',
                 type: 'POST',
                 data: {
                     id: id,
@@ -36,7 +40,7 @@ $(document).ready(function() {
         var row = $(this).parent().parent();
     
         $.ajax({
-            url: 'index.php?user/delete',
+            url: 'index.php?'+ type +'/delete',
             type: 'POST',
             data: {
                 id: id

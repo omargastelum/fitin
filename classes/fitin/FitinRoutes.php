@@ -18,7 +18,8 @@ class FitinRoutes implements \Ninja\Routes {
     public function getRoutes(): array {
 		$homeController = new \Fitin\Controllers\Home();
 		$adminHomeController = new \Fitin\Controllers\Admin\Home();
-		$adminUserController = new \Fitin\Controllers\Admin\User($this->usersTable);
+		$adminGroupController = new \Fitin\Controllers\Admin\Group($this->groupsTable, $this->usersTable, $this->authentication);
+		$adminUserController = new \Fitin\Controllers\Admin\User($this->usersTable, $this->groupsTable, $this->authentication);
 		$groupController = new \Fitin\Controllers\Group($this->groupsTable, $this->usersTable, $this->membershipsTable, $this->authentication);
 		$userController = new \Fitin\Controllers\Register($this->usersTable, $this->groupsTable, $this->membershipsTable, $this->authentication);
 		$loginController = new \Fitin\Controllers\Login($this->authentication);
@@ -42,30 +43,33 @@ class FitinRoutes implements \Ninja\Routes {
 				],
 				'template' => 'registersuccess.html.php'
 			],
-			'group/save' => [
+			'group/create' => [
 				'POST' => [
-					'controller' => $groupController,
+					'controller' => $adminGroupController,
 					'action' => 'saveEdit'
 				],
 				'GET' => [
-					'controller' => $groupController,
-					'action' => 'edit'
+					'controller' => $adminGroupController,
+					'action' => 'showForm'
 				],
-				'login' => true
-				
+				'template' => 'admin_layout.html.php',
+				'login' => true,
+				'admin' => true
 			],
 			// 5/23/21 OG NEW - Admin create group route
 			// 				  - POST and GET call the same controller and method
 			'group/edit' => [
 				'POST' => [
-					'controller' => $groupController,
+					'controller' => $adminGroupController,
 					'action' => 'edit'
 				],
 				'GET' => [
-					'controller' => $groupController,
+					'controller' => $adminGroupController,
 					'action' => 'edit'
 				],
-				'login' => true
+				'template' => 'admin_layout.html.php',
+				'login' => true,
+				'admin' => true
 				
 			],
 			// 5/23/21 OG MOD - changed from joke/delete to group/delete, and the controller to groupController
@@ -134,14 +138,16 @@ class FitinRoutes implements \Ninja\Routes {
 			//					Access requieres the user to be logged in
 			'admin/groups' => [
 				'GET' => [
-					'controller' => $groupController,
-					'action' => 'adminGroupList'
+					'controller' => $adminGroupController,
+					'action' => 'list'
 				],
-				'login' => true
+				'template' => 'admin_layout.html.php',
+				'login' => true,
+				'admin' => true
 			],
 			'admin/users' => [
 				'GET' => [
-					'controller' => $userController,
+					'controller' => $adminUserController,
 					'action' => 'list'
 				],
 				'template' => 'admin_layout.html.php',
@@ -174,10 +180,11 @@ class FitinRoutes implements \Ninja\Routes {
 			],
 			'user/delete' => [
 				'POST' => [
-					'controller' => $userController,
+					'controller' => $adminUserController,
 					'action' => 'delete'
 				],
-				'login' => true
+				'login' => true,
+				'admin' => true
 			],
 			'admin/profile' => [
 				'GET' => [

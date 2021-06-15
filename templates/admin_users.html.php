@@ -1,9 +1,10 @@
 <section id="body">
     <div class="container">
-        
+        <input type="hidden" name="type" id="type" value="user">
+        <h1>Users</h1>
+        <p>Total Users: <?=$totalUsers?>
         <div class="table-responsive">
-            <h1>Users</h1>
-            <table class="table table-sm">
+            <table class="table table-sm table-striped table-hover">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -18,8 +19,8 @@
                 <tbody>
                     <?php foreach($users as $user): ?>
                         <tr>
-                            <th scope="row"><?=$user['id']?></th>
-                            <td scope="row"><button id="deleteBtn-<?=$user['id']?>" class="deleteBtn">Delete</button></td>
+                            <td scope="row"><?=$user['id']?></td>
+                            <td scope="row"><button id="deleteBtn-<?=$user['id']?>" class="deleteBtn btn btn-danger btn-sm">Delete</button></td>
                             <td><div contenteditable="true" class="edit" id="firstname-<?=$user['id']?>"><?=$user['firstname']?></div></td>
                             <td><div contenteditable="true" class="edit" id="lastname-<?=$user['id']?>"><?=$user['lastname']?></div></td>
                             <td><div contenteditable="true" class="edit" id="email-<?=$user['id']?>"><?=$user['email']?></div></td>
