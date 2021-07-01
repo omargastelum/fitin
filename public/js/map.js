@@ -100,6 +100,12 @@ function createCards(info, elementId) {
     el.innerHTML = markupString;
 }
 
+// 2021-07-01 OG NEW - Set markup for the map marker info window 
+function setInfowindowMarkup(info) {
+    return  '<h4>'+ info['name'] +'</h4>' +
+            '<p>'+ info['street'] + ' ' + info['city'] + ' ' + info['state'] + '</p>';
+}
+
 // 2021-07-01 OG NEW - Retrieve the groups based on the zipcode parameter and set the map based on that same zipcode 
 function setMap(zipcode) {
     // 2021-07-01 OG NEW - Set a new geocoder 
@@ -136,7 +142,7 @@ function setMap(zipcode) {
                                 addresses.push({
                                     type: groups[i]['category'], // The type of group
                                     value: groups[i]['street'] + ' ' + groups[i]['city'] + ' ' + groups[i]['state'], // The address value
-                                    markup: '' // The entire markup to be used in the info window
+                                    markup: setInfowindowMarkup(groups[i]) // The entire markup to be used in the info window
                                 });
                             }
 
