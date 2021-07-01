@@ -13,6 +13,16 @@
                     <textarea class="form-control" id="description" name="group[description]" placeholder="Description"></textarea>
                 </div>
                 <div class="form-group">
+                    <label for="exampleFormControlSelect1">Category</label>
+                    <select class="form-control" id="exampleFormControlSelect1" name="group[categoryId]">
+                        <option>Choose a category:</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?=$category['id']?>"><?=$category['name']?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                
+                <div class="form-group">
                     <label for="street">Street</label>
                     <input type="text" class="form-control" id="street" name="group[street]" placeholder="Enter your HQ meeting location">
                 </div>

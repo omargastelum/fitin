@@ -12,15 +12,16 @@ class FitinRoutes implements \Ninja\Routes {
         $this->groupsTable = new \Ninja\DatabaseTable($pdo, 'group', 'id');
 		$this->usersTable = new \Ninja\DatabaseTable($pdo, 'user', 'id');
 		$this->membershipsTable = new \Ninja\DatabaseTable($pdo, 'membership', 'groupid');
+		$this->categoriesTable = new \Ninja\DatabaseTable($pdo, 'category', 'id');
 		$this->authentication = new \Ninja\Authentication($this->usersTable, 'email', 'password');
     }
 
     public function getRoutes(): array {
 		$homeController = new \Fitin\Controllers\Home();
 		$adminHomeController = new \Fitin\Controllers\Admin\Home();
-		$adminGroupController = new \Fitin\Controllers\Admin\Group($this->groupsTable, $this->usersTable, $this->authentication);
+		$adminGroupController = new \Fitin\Controllers\Admin\Group($this->groupsTable, $this->usersTable, $this->authentication, $this->categoriesTable);
 		$adminUserController = new \Fitin\Controllers\Admin\User($this->usersTable, $this->groupsTable, $this->authentication);
-		$groupController = new \Fitin\Controllers\Group($this->groupsTable, $this->usersTable, $this->membershipsTable, $this->authentication);
+		$groupController = new \Fitin\Controllers\Group($this->groupsTable, $this->usersTable, $this->membershipsTable, $this->categoriesTable, $this->authentication);
 		$userController = new \Fitin\Controllers\Register($this->usersTable, $this->groupsTable, $this->membershipsTable, $this->authentication);
 		$loginController = new \Fitin\Controllers\Login($this->authentication);
 
@@ -196,12 +197,22 @@ class FitinRoutes implements \Ninja\Routes {
 			// ==========================================================================
 			// MAIN - GROUPS
 			// ==========================================================================
+			// 2021-07-01 OG NEW - This is a get route that sets up the template but the rest of the content
+			// 					   is provided via AJAX call in the map.js script.
 			'group/list' => [
 				'GET' => [
 					'controller' => $groupController,
 					'action' => 'list'
 				],
 				'template' => 'layout.html.php'
+			],
+			// 2021-07-01 OG NEW - This is a POST route that uses a zipcode parameter to get groups within
+			// 					   that area. 
+			'group/jsonlist' => [
+				'POST' => [
+					'controller' => $groupController,
+					'action' => 'jsonlist'
+				]
 			],
 			// 5/23/21 OG NEW - This is the POST route that creates the many-to-many relationship between
 			// 					the user and the group. It calls the join method in the group controller.

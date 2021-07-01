@@ -1,12 +1,3 @@
-<!---------------------------------------------------------------------------------------------------
-* Name: Omar Gastelum
-* Class: CPMS 320
-* Assignment #: Final Project
-* Due Date: 5/27/21
-* Problem: User CH11 source code to develop a web application
-
----------------------------------------------------------------------------------------------------------->
-
 <?php
 try {
 	include __DIR__ . '/../includes/autoload.php';

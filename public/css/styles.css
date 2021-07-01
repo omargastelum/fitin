@@ -484,7 +484,7 @@ section .title {
     font-weight: 600;
     color: rgb(98, 100, 100);
 }
-.card.card-small .card-button a {
+.card.card-small .card-button button {
     width: 100%;
     display: inline-block;
     padding: 10px 0;

@@ -27,7 +27,7 @@
             <ul>
                 <li><a href="index.php"><i class="fa fa-home" aria-hidden="true"></i>
                     Home</a></li>
-                <li><a href="groups.html"><i class="fa fa-users" aria-hidden="true"></i>
+                <li><a href="index.php?group/list"><i class="fa fa-users" aria-hidden="true"></i>
                     Groups</a></li>
                 <li><a href="index.php?logout"><i class="fa fa-sign-out" aria-hidden="true"></i>
                     Logout</a></li>

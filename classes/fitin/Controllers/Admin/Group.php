@@ -5,9 +5,10 @@
     use \Ninja\Authentication;
 
     class Group {
-        public function __construct(DatabaseTable $groupsTable, DatabaseTable $usersTable, Authentication $authentication) {
+        public function __construct(DatabaseTable $groupsTable, DatabaseTable $usersTable, Authentication $authentication, DatabaseTable $categoriesTable) {
             $this->groupsTable = $groupsTable;
             $this->usersTable = $usersTable;
+            $this->categoriesTable = $categoriesTable;
             $this->authentication = $authentication;
         }
 
@@ -19,18 +20,21 @@
             $groups = [];
             foreach ($result as $group) {
                 $user = $this->usersTable->findById($group['userId']);
+                $category = $this->categoriesTable->findById($group['categoryId']);
     
                 $groups[] = [
                     'id' => $group['id'],
                     'name' => $group['name'],
                     'description' => $group['description'],
+                    'category' => $category['name'],
                     'street' => $group['street'],
                     'city' => $group['city'],
                     'state' => $group['state'],
                     'country' => $group['country'],
                     'zipcode' => $group['zipcode'],
                     'date' => $group['date'],
-                    'creator' => $user['firstname']. ' ' .$user['lastname']
+                    'creator' => $user['firstname']. ' ' .$user['lastname'],
+                    'userId' => $group['userId']
                 ];
 
                 // 5/23/21 OG NEW - Count the groups that belong to the active user
@@ -63,11 +67,15 @@
 
         public function showForm() {
             $user = $this->authentication->getUser();
+
+            $categories = $this->categoriesTable->findAll();
+
             $title = 'Create Group';
             return ['template' => 'editgroup.html.php',
                     'title' => $title,
                     'variables' => [
                         'userId' => $user['id'] ?? null,
+                        'categories' => $categories,
                         'permissions' => $user['permissions'] ?? null,
                         'loggedIn' => $this->authentication->isLoggedIn()
                     ]

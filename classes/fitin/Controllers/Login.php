@@ -15,7 +15,7 @@ class Login {
 	public function processLogin() {
 		if ($this->authentication->login($_POST['email'], $_POST['password'])) {
 			//header('Location: /login/success'); //5/25/18 JG DEL1L  org
-            header('Location: index.php'); //5/25/18 JG NEW1L  
+            header('Location: index.php?group/list'); //5/25/18 JG NEW1L  
 			
 		}
 		else {

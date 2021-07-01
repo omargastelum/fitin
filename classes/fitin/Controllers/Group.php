@@ -8,10 +8,11 @@ class Group {
 	private $groupsTable;
 
 	// 5/23/21 OG MOD - Added a memberships table to manage the many-to-many relationship between users and groups
-	public function __construct(DatabaseTable $groupsTable, DatabaseTable $usersTable, DatabaseTable $membershipTable, Authentication $authentication) {
+	public function __construct(DatabaseTable $groupsTable, DatabaseTable $usersTable, DatabaseTable $membershipTable, DatabaseTable $categoriesTable, Authentication $authentication) {
 		$this->groupsTable = $groupsTable;
 		$this->usersTable = $usersTable;
 		$this->membershipTable = $membershipTable;
+		$this->categoriesTable = $categoriesTable;
 		$this->authentication = $authentication;
 	}
 
@@ -19,18 +20,27 @@ class Group {
 	public function list() {
 		// 5/23/21 OG NEW - Get user logged-in user to display an add-group button in the groups page
 		$activeUser = $this->authentication->getUser();
-		$result = $this->groupsTable->findAll();
 
+		// 2021-06-25 OG NEW - Set the zipcode from the search, else set the user's zip code 
+		$zipcode = null;
+
+		if (isset($_POST['zipcode'])) {
+			$zipcode = $_POST['zipcode'];
+		}
+
+		$result = $this->groupsTable->find('zipcode', $zipcode);
+
+		// 2021-07-01 OG NEW - Go through each row returned 
 		$groups = [];
 		foreach ($result as $group) {
 			$user = $this->usersTable->findById($group['userId']);
-			// 5/23/21 OG NEW - Goes through each group and gets the the user ids based on the current group id
+			$category = $this->categoriesTable->findById($group['categoryId']);
+			// 5/23/21 OG NEW - Goes through each group and get the the user ids based on the current group id
 			$memberships = $this->membershipTable->find('groupid', $group['id']);
-
-			$member = null;
 
 			// 5/23/21 OG NEW - for each membership if the membership userid is the same as that of the current user
 			//					then it sets to the member value to true for template displaying purposes
+			$member = null;
 			foreach ($memberships as $membership) {
 				if ($activeUser) {
 					if ( $membership['userid'] == $activeUser['id'] ) {
@@ -42,6 +52,13 @@ class Group {
 			$groups[] = [
 				'id' => $group['id'],
 				'name' => $group['name'],
+				'description' => $group['description'],
+				'category' => $category['name'],
+				'street' => $group['street'],
+				'city' => $group['city'],
+				'state' => $group['state'],
+				'country' => $group['country'],
+				'zipcode' => $group['zipcode'],
 				'date' => $group['date'],
 				'userId' => $group['userId'],
 				'firstname' => $user['firstname'],
@@ -50,6 +67,8 @@ class Group {
 				'userId' => $user['id'],
 				'member' => $member // Here each group states if the current user is a memeber
 			];
+
+			// print $group['zipcode'];
 
 		}
 
@@ -63,12 +82,18 @@ class Group {
 				'title' => $title, 
 				'variables' => [
 						'totalGroups' => $totalGroups,
+						'zipcode' => $zipcode,
 						'groups' => $groups,
+						'activeUser' => $activeUser,
 						'userId' => $user['id'] ?? null,
 						'permissions' => $user['permissions'] ?? null,
 						'loggedIn' => $this->authentication->isLoggedIn()
 					]
 				];
+	}
+
+	public function jsonlist() {
+		return json_encode($this->list()['variables']);
 	}
 
 	// 5/23/21 OG NEW - Joins a user to a group

@@ -33,6 +33,7 @@ class EntryPoint {
 
 		$routes = $this->routes->getRoutes();	
 		$authentication = $this->routes->getAuthentication();
+		
 		// 5/19/2021 OG NEW 1L - Get user for website header when logged in
 		
 		if (isset($routes[$this->route]['login']) && isset($routes[$this->route]['login']) && !$authentication->isLoggedIn()) {
@@ -44,23 +45,33 @@ class EntryPoint {
 		} else {
 			$controller = $routes[$this->route][$this->method]['controller'];
 			$action = $routes[$this->route][$this->method]['action'];
-			$template = $routes[$this->route]['template'];
+			$template = $routes[$this->route]['template'] ?? '';
 			$page = $controller->$action();
 
-			$title = $page['title'];
+			$keys = new \Fitin\FitinConfig();
+			$google = $keys->getKeys();
 
-			if (isset($page['variables'])) {
-				$output = $this->loadTemplate($page['template'], $page['variables']);
+			$title = $page['title'] ?? '';
+
+			// 2021-07-01 OG NEW - if template is set, then load the template 
+			if ($template != '') {
+				if (isset($page['variables'])) {
+					$output = $this->loadTemplate($page['template'], $page['variables']);
+				}
+				else {
+					$output = $this->loadTemplate($page['template']);
+				}
+				
+				echo $this->loadTemplate($template, ['loggedIn' => $authentication->isLoggedIn(),
+																'output' => $output,
+																'title' => $title,
+																'user' => $authentication->getUser(),
+																'keys' => $google
+																]);
+			// 2021-07-01 OG NEW - else, echo the page variable that returns json 
+			} else {
+				echo $page;
 			}
-			else {
-				$output = $this->loadTemplate($page['template']);
-			}
-			
-			echo $this->loadTemplate($template, ['loggedIn' => $authentication->isLoggedIn(),
-															'output' => $output,
-															'title' => $title,
-															'user' => $authentication->getUser()
-															]);
 			
 
 		}
