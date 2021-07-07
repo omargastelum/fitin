@@ -69,11 +69,11 @@ function createCards(info, elementId) {
                                 '<div class="card-image"><img src="images/hero/' + info['groups'][i]['category'] + '.jpg" alt=""></div>'+
                                 '<div class="card-details">'+
                                     '<div class="card-title">'+
-                                        '<h4 class="card-title"><a href="group.html">' + info['groups'][i]['name'] + '</a></h4>'+
+                                        '<h4 class="card-title"><a href="index.php?group?id='+ info['groups'][i]['id'] +'">' + info['groups'][i]['name'] + '</a></h4>'+
                                     '</div>'+
                                     '<div class="card-info">'+
                                         '<p>Last activity: 8 days ago</p>'+
-                                        '<p>10 Members</p>'+
+                                        '<p>'+ info['groups'][i]['membersCount'] +' Members</p>'+
                                         '<p hidden>meditation</p>'+
                                         '<p hidden>' + info['groups'][i]['street'] + '</p>'+
                                         '<p>' + info['groups'][i]['city'] + '</p>'+
@@ -85,11 +85,11 @@ function createCards(info, elementId) {
         if (info['loggedIn']) {
             if (info['groups'][i]['member'] == true) {
                 markupString += '<div class="card-button active">'+
-                                    '<button id="' + info['groups'][i]['id'] + '" value="Leave" class="btn btn-success btn-block">Leave</button>'+
+                                    '<button id="' + info['groups'][i]['id'] + '" value="Leave" class="btn btn-success btn-block btn-action">Leave</button>'+
                                 '</div>';
             } else {
                 markupString += '<div class="card-button active">'+
-                                    '<button id="' + info['groups'][i]['id'] + '" value="Join" class="btn btn-primary btn-block">Join</button>'+
+                                    '<button id="' + info['groups'][i]['id'] + '" value="Join" class="btn btn-primary btn-block btn-action">Join</button>'+
                                 '</div>';
             }
         }
@@ -153,6 +153,8 @@ function setMap(zipcode) {
 
                             // 2021-07-01 OG NEW - Set the group cards for each group returned 
                             createCards(parsedData, 'groupCards');
+
+                            membership();
                         }
                     });
                 }
@@ -168,6 +170,7 @@ function initMap() {
     // 2021-07-01 OG NEW - Get the logged-in user's zipcode to set map
     var zipcode = document.getElementById('userZipcode').value;
     setMap(zipcode);
+    
 }
 
 

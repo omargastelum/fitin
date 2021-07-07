@@ -37,6 +37,7 @@ class Group {
 			$category = $this->categoriesTable->findById($group['categoryId']);
 			// 5/23/21 OG NEW - Goes through each group and get the the user ids based on the current group id
 			$memberships = $this->membershipTable->find('groupid', $group['id']);
+			$membersCount = 0;
 
 			// 5/23/21 OG NEW - for each membership if the membership userid is the same as that of the current user
 			//					then it sets to the member value to true for template displaying purposes
@@ -47,6 +48,7 @@ class Group {
 						$member = true;
 					}
 				}
+				$membersCount++;
 			}
 
 			$groups[] = [
@@ -65,7 +67,8 @@ class Group {
                 'lastname' => $user['lastname'],
 				'email' => $user['email'],
 				'userId' => $user['id'],
-				'member' => $member // Here each group states if the current user is a memeber
+				'member' => $member, // Here each group states if the current user is a memeber
+				'membersCount' => $membersCount
 			];
 
 			// print $group['zipcode'];
@@ -94,6 +97,41 @@ class Group {
 
 	public function jsonlist() {
 		return json_encode($this->list()['variables']);
+	}
+
+	public function show() {
+		$group = $this->groupsTable->findById($_GET['id']);
+		$user = $this->usersTable->findById($group['userId']);
+		$activeUser = $this->authentication->getUser();
+
+		$memberships = $this->membershipTable->find('groupid', $group['id']);
+		$groupMembers = [];
+		$groupMemberCount = 0;
+		$member = false;
+
+		foreach ($memberships as $membership) {
+			$groupMember = $this->usersTable->findById($membership['userid']);
+			$groupMembers[] = $groupMember;
+			$groupMemberCount++;
+
+			if ($membership['userid'] == $activeUser['id']) {
+				$member = true;
+			}
+		}
+
+		$title = $group['name'];
+
+		return [
+			'template' => 'group.html.php',
+			'title' => $title,
+			'variables' => [
+				'group' => $group,
+				'user' => $user,
+				'groupMembers' => $groupMembers,
+				'groupMemberCount' => $groupMemberCount,
+				'member' => $member
+			]
+		];
 	}
 
 	// 5/23/21 OG NEW - Joins a user to a group

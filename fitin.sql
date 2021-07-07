@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 24, 2021 at 10:28 PM
+-- Generation Time: Jul 07, 2021 at 04:22 PM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -24,12 +24,39 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `category`
+--
+
+CREATE TABLE `category` (
+  `id` int(11) NOT NULL,
+  `name` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `category`
+--
+
+INSERT INTO `category` (`id`, `name`) VALUES
+(6, 'yoga'),
+(7, 'bootcamp'),
+(10, 'meditation');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `group`
 --
 
 CREATE TABLE `group` (
   `id` int(11) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `categoryId` int(11) NOT NULL,
+  `street` varchar(100) NOT NULL,
+  `city` varchar(50) NOT NULL,
+  `state` varchar(25) NOT NULL,
+  `country` varchar(25) NOT NULL,
+  `zipcode` varchar(10) NOT NULL,
   `date` date NOT NULL,
   `userId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -38,10 +65,11 @@ CREATE TABLE `group` (
 -- Dumping data for table `group`
 --
 
-INSERT INTO `group` (`id`, `name`, `date`, `userId`) VALUES
-(52, 'Upland Bootcamp X', '2021-05-24', 27),
-(53, 'Alicia\'s Bootcamp', '2021-05-24', 28),
-(54, 'Olivedale Yoga', '2021-05-24', 28);
+INSERT INTO `group` (`id`, `name`, `description`, `categoryId`, `street`, `city`, `state`, `country`, `zipcode`, `date`, `userId`) VALUES
+(71, 'Olivedale Yoga 1', 'A yoga group for all.', 6, '236 Sultana Ave', 'Upland', 'CA', 'United States', '91786', '2021-06-17', 44),
+(72, 'Red Hill Meditation', 'A meditation group for the elderly.', 10, '8358 Red Hill Country Club Dr', 'Rancho Cucamonga', 'Ca', 'United States', '91730', '2021-06-25', 44),
+(73, 'YMCA Meditation', 'Free meditation group.', 10, '1150 E Foothill Blvd', 'Upland', 'Ca', 'United States', '91786', '2021-06-28', 44),
+(75, 'Magnolia Bootcamp', 'A bootcamp for beginners', 7, '651 W 15th St', 'Upland', 'Ca', 'United States', '91786', '2021-07-01', 43);
 
 -- --------------------------------------------------------
 
@@ -60,9 +88,8 @@ CREATE TABLE `membership` (
 --
 
 INSERT INTO `membership` (`id`, `userid`, `groupid`) VALUES
-(8, 27, 52),
-(9, 28, 52),
-(10, 28, 53);
+(87, 44, 71),
+(94, 43, 71);
 
 -- --------------------------------------------------------
 
@@ -75,31 +102,39 @@ CREATE TABLE `user` (
   `firstname` varchar(255) DEFAULT NULL,
   `lastname` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `gender` int(11) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `permissions` int(11) DEFAULT NULL
+  `permissions` int(11) DEFAULT NULL,
+  `zipcode` int(11) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `gender`, `password`, `permissions`) VALUES
-(27, 'Omar', 'Gastelum', 'omargastelum@fitin.com', 2, '$2y$10$m2sNzBPi2XS.1PwhMW76fej2luQ0dCPIiEwViXjbvokRmddlGnDNe', 3),
-(28, 'Alicia', 'Gastelum', 'aliciagastelum@fitin.com', 1, '$2y$10$EJ0a13npR2zW9MTL5CysN.dnQSzOB2LELEsiKRfEhwhRzRkQ0iqm.', 2),
-(33, 'Victoria', 'Gastelum', 'victoriagastelum@fitin.com', 1, '$2y$10$fky3BccVSIhbHRoOHeUzb.h513UBXxhWcgbamPg6u.gwAo39.SRZy', 1),
-(34, 'Homer', 'Simpson', 'homersimpson@fitin.com', 2, '$2y$10$3dv.Jz8SafsMEQei.AGSdOvo5KzO4WOHWsyRQp4okH3zfZQqFtury', 1);
+INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `password`, `permissions`, `zipcode`, `image`) VALUES
+(43, 'Jemain', 'Clement', 'jemainclement@fitin.com', '$2y$10$Igv63YnScQTvJnetG8Tl5.wKY.GeS.lVvElluNAg0/zQCM4ekCXgu', 3, 91786, 'jemain-clement.jpg'),
+(44, 'Bret', 'McKenzie', 'bretmckenzie@fitin.com', '$2y$10$9NGRUYT.rg53PTwB3ZqsEOyxfVTGDS4e4o3l8HqArJJJMNQpRqK.i', 2, 91786, 'bret-mckenzie.jpg'),
+(46, 'Mel', 'Fan', 'melfan@fitin.com', '$2y$10$Zpn3psoMOC2rFo/bb2j19OScfQEy2HR3sPrnI.9zS4P/GKAVMOYEK', 1, 91733, 'mel_fan.jpg');
 
 --
 -- Indexes for dumped tables
 --
 
 --
+-- Indexes for table `category`
+--
+ALTER TABLE `category`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `group`
 --
 ALTER TABLE `group`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `userId` (`userId`);
+  ADD KEY `userId` (`userId`),
+  ADD KEY `zipcode` (`zipcode`),
+  ADD KEY `category` (`categoryId`);
 
 --
 -- Indexes for table `membership`
@@ -120,22 +155,28 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT for table `category`
+--
+ALTER TABLE `category`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- AUTO_INCREMENT for table `group`
 --
 ALTER TABLE `group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `membership`
 --
 ALTER TABLE `membership`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- Constraints for dumped tables
@@ -145,7 +186,8 @@ ALTER TABLE `user`
 -- Constraints for table `group`
 --
 ALTER TABLE `group`
-  ADD CONSTRAINT `group_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `group_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `group_ibfk_2` FOREIGN KEY (`categoryId`) REFERENCES `category` (`id`);
 
 --
 -- Constraints for table `membership`

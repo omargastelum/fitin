@@ -11,6 +11,7 @@ class FitinRoutes implements \Ninja\Routes {
 
         $this->groupsTable = new \Ninja\DatabaseTable($pdo, 'group', 'id');
 		$this->usersTable = new \Ninja\DatabaseTable($pdo, 'user', 'id');
+		$this->activitiesTable = new \Ninja\DatabaseTable($pdo, 'activity', 'id');
 		$this->membershipsTable = new \Ninja\DatabaseTable($pdo, 'membership', 'groupid');
 		$this->categoriesTable = new \Ninja\DatabaseTable($pdo, 'category', 'id');
 		$this->authentication = new \Ninja\Authentication($this->usersTable, 'email', 'password');
@@ -21,6 +22,7 @@ class FitinRoutes implements \Ninja\Routes {
 		$adminHomeController = new \Fitin\Controllers\Admin\Home();
 		$adminGroupController = new \Fitin\Controllers\Admin\Group($this->groupsTable, $this->usersTable, $this->authentication, $this->categoriesTable);
 		$adminUserController = new \Fitin\Controllers\Admin\User($this->usersTable, $this->groupsTable, $this->authentication);
+		$adminActivityController = new \Fitin\Controllers\Admin\Activity($this->activiesTable, $this->groupsTable, $this->usersTable, $this->authentication);
 		$groupController = new \Fitin\Controllers\Group($this->groupsTable, $this->usersTable, $this->membershipsTable, $this->categoriesTable, $this->authentication);
 		$userController = new \Fitin\Controllers\Register($this->usersTable, $this->groupsTable, $this->membershipsTable, $this->authentication);
 		$loginController = new \Fitin\Controllers\Login($this->authentication);
@@ -159,7 +161,18 @@ class FitinRoutes implements \Ninja\Routes {
 				'login' => true,
 				'admin' => true
 			],
-			
+			// ==========================================================================
+			// ADMIN - ACTIVITIES
+			// ==========================================================================
+			'admin/activities' => [
+				'GET' => [
+					'controller' => $adminActivityController,
+					'action' => 'list'
+				],
+				'template' => 'admin_layout.html.php',
+				'login' => true,
+				'admin' => true
+			],
 			// ==========================================================================
 			// LOGIN
 			// ==========================================================================
@@ -232,7 +245,13 @@ class FitinRoutes implements \Ninja\Routes {
 				],
 				'login' => true
 			],
-			
+			'group' => [
+				'GET' => [
+					'controller' => $groupController,
+					'action' => 'show'
+				],
+				'template' => 'layout.html.php'
+			],
 			
 			'admin/profile' => [
 				'GET' => [

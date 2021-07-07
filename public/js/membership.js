@@ -1,7 +1,7 @@
 
 
-function start() {
-    var group_div = document.getElementsByClassName('btn-block');
+function membership() {
+    var group_div = document.getElementsByClassName('btn-action');
     
     for (var i = 0; i < group_div.length; i++) {
         var button = group_div[i];
@@ -41,4 +41,4 @@ function start() {
     }
 }
 
-window.addEventListener('load', start, false);
+window.addEventListener('load', membership, false);

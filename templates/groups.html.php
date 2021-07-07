@@ -26,7 +26,7 @@
         <div class="row" id='groupCards'></div>
     </div>
 </section>
-
+<script src="js/map.js"></script>
 <script src="js/membership.js"></script>
 
 
