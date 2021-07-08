@@ -103,12 +103,12 @@
         }
 
         public function edit() {
-            $updatedGroup = [
+            $updated = [
                 'id' => $_POST['id'],
                 $_POST['field'] => $_POST['value']
             ];
     
-            $this->groupsTable->save($updatedGroup);
+            $this->groupsTable->save($updated);
         }
 
         public function delete() {

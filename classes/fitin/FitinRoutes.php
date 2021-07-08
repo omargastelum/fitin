@@ -22,7 +22,7 @@ class FitinRoutes implements \Ninja\Routes {
 		$adminHomeController = new \Fitin\Controllers\Admin\Home();
 		$adminGroupController = new \Fitin\Controllers\Admin\Group($this->groupsTable, $this->usersTable, $this->authentication, $this->categoriesTable);
 		$adminUserController = new \Fitin\Controllers\Admin\User($this->usersTable, $this->groupsTable, $this->authentication);
-		$adminActivityController = new \Fitin\Controllers\Admin\Activity($this->activiesTable, $this->groupsTable, $this->usersTable, $this->authentication);
+		$adminActivityController = new \Fitin\Controllers\Admin\Activity($this->activitiesTable, $this->groupsTable, $this->usersTable, $this->authentication);
 		$groupController = new \Fitin\Controllers\Group($this->groupsTable, $this->usersTable, $this->membershipsTable, $this->categoriesTable, $this->authentication);
 		$userController = new \Fitin\Controllers\Register($this->usersTable, $this->groupsTable, $this->membershipsTable, $this->authentication);
 		$loginController = new \Fitin\Controllers\Login($this->authentication);
@@ -161,6 +161,7 @@ class FitinRoutes implements \Ninja\Routes {
 				'login' => true,
 				'admin' => true
 			],
+			
 			// ==========================================================================
 			// ADMIN - ACTIVITIES
 			// ==========================================================================
@@ -170,6 +171,39 @@ class FitinRoutes implements \Ninja\Routes {
 					'action' => 'list'
 				],
 				'template' => 'admin_layout.html.php',
+				'login' => true,
+				'admin' => true
+			],
+			'activity/create' => [
+				'POST' => [
+					'controller' => $adminActivityController,
+					'action' => 'saveEdit'
+				],
+				'GET' => [
+					'controller' => $adminActivityController,
+					'action' => 'showForm'
+				],
+				'template' => 'admin_layout.html.php',
+				'login' => true,
+				'admin' => true
+			],
+			'activity/edit' => [
+				'POST' => [
+					'controller' => $adminActivityController,
+					'action' => 'edit'
+				],
+				'GET' => [
+					'controller' => $adminActivityController,
+					'action' => 'edit'
+				],
+				'login' => true,
+				'admin' => true
+			],
+			'activity/delete' => [
+				'POST' => [
+					'controller' => $adminActivityController,
+					'action' => 'delete'
+				],
 				'login' => true,
 				'admin' => true
 			],

@@ -9,7 +9,7 @@
                     <input type="text" class="form-control" id="name" name="group[name]" placeholder="Enter group name">
                 </div>
                 <div class="form-group">
-                    <label for="password">Description</label>
+                    <label for="description">Description</label>
                     <textarea class="form-control" id="description" name="group[description]" placeholder="Description"></textarea>
                 </div>
                 <div class="form-group">
