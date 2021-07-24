@@ -12,46 +12,34 @@
                 </div>
                 <p class="description"><?=$group['description']?></p>
                 <p>Group Administrator: <a href="profile.html"><?=$user['firstname']?> <?=$user['lastname']?></a></p>
-                <?php if ($member): ?>
-                    <button id="<?=$group['id']?>" value="Leave" class="btn btn-complementary btn-action">Leave</button>
-                <?php else: ?>
-                    <button id="<?=$group['id']?>" value="Join" class="btn btn-complementary btn-action">Join</button>
+                <?php if ($loggedIn): ?>
+                    <?php if ($member): ?>
+                        <button id="<?=$group['id']?>" value="Leave" class="btn btn-complementary btn-action">Leave</button>
+                    <?php else: ?>
+                        <button id="<?=$group['id']?>" value="Join" class="btn btn-complementary btn-action">Join</button>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
         </div>
         <div id="activities" class="card card-large">
             <div class="container">
                 <h4>UPCOMING ACTIVITIES</h4>
-                <div class="card card-flat card-wide">
-                    <div class="row">
-                        <img src="images/hero/bootcamp.jpg" alt="">
-                        <div class="card-details">
-                            <p class="card-heading">THURSDAY, JUNE 10 @ 4:00 PM</p>
-                            <p><a href="activity.html">Cardio Focused Circuit</a></p>
-                            <p>Olivedale Bootcamp - Upland CA</p>
+                <?php if ($member): ?>
+                    <?php foreach($activities as $activity): ?>
+                        <div class="card card-flat card-wide">
+                            <div class="row">
+                                <img src="images/hero/<?=$category?>.jpg" alt="">
+                                <div class="card-details">
+                                    <p class="card-heading"><?=strtoupper($activity['dayOfWeek'])?>, <?=strtoupper($activity['month'])?> <?=strtoupper($activity['day'])?> @ <?=$activity['hour']?>:<?=$activity['minutes']?> <?=$activity['meridiem']?></p>
+                                    <p><a href="index.php?activity?id=<?=$activity['id']?>"><?=$activity['name']?></a></p>
+                                    <p><?=$group['name']?> - <?=$group['city']?> <?=$group['state']?></p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="card card-flat card-wide">
-                    <div class="row">
-                        <img src="images/hero/bootcamp.jpg" alt="">
-                        <div class="card-details">
-                            <p class="card-heading">THURSDAY, JUNE 10 @ 4:00 PM</p>
-                            <p><a href="activity.html">Cardio Focused Circuit</a></p>
-                            <p>Olivedale Bootcamp - Upland CA</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card card-flat card-wide">
-                    <div class="row">
-                        <img src="images/hero/bootcamp.jpg" alt="">
-                        <div class="card-details">
-                            <p class="card-heading">THURSDAY, JUNE 10 @ 4:00 PM</p>
-                            <p><a href="activity.html">Cardio Focused Circuit</a></p>
-                            <p>Olivedale Bootcamp - Upland CA</p>
-                        </div>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Join group to see upcoming activities.</p>
+                <?php endif; ?>
             </div>
         </div>
         <?php if ($groupMemberCount > 0): ?>

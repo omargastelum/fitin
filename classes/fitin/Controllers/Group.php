@@ -8,11 +8,12 @@ class Group {
 	private $groupsTable;
 
 	// 5/23/21 OG MOD - Added a memberships table to manage the many-to-many relationship between users and groups
-	public function __construct(DatabaseTable $groupsTable, DatabaseTable $usersTable, DatabaseTable $membershipTable, DatabaseTable $categoriesTable, Authentication $authentication) {
+	public function __construct(DatabaseTable $groupsTable, DatabaseTable $usersTable, DatabaseTable $membershipTable, DatabaseTable $categoriesTable, DatabaseTable $activitiesTable, Authentication $authentication) {
 		$this->groupsTable = $groupsTable;
 		$this->usersTable = $usersTable;
 		$this->membershipTable = $membershipTable;
 		$this->categoriesTable = $categoriesTable;
+		$this->activitiesTable = $activitiesTable;
 		$this->authentication = $authentication;
 	}
 
@@ -102,7 +103,9 @@ class Group {
 	public function show() {
 		$group = $this->groupsTable->findById($_GET['id']);
 		$user = $this->usersTable->findById($group['userId']);
+		$activities_result = $this->activitiesTable->find('groupId', $group['id']);
 		$activeUser = $this->authentication->getUser();
+		$category = $this->categoriesTable->findById($group['categoryId']);
 
 		$memberships = $this->membershipTable->find('groupid', $group['id']);
 		$groupMembers = [];
@@ -114,9 +117,33 @@ class Group {
 			$groupMembers[] = $groupMember;
 			$groupMemberCount++;
 
-			if ($membership['userid'] == $activeUser['id']) {
-				$member = true;
+			if (isset($activeUser['id'])) {
+				if ($membership['userid'] == $activeUser['id']) {
+					$member = true;
+				}
 			}
+			
+		}
+
+		// 2021-07-08 OG NEW - Format activity date
+		$activities = [];
+
+		foreach ($activities_result as $activity) {
+
+			$date = date_create($activity['date']);
+
+			$activities[] = [
+				'id' => $activity['id'],
+				'name' => $activity['name'],
+				'description' => $activity['description'],
+				'dayOfWeek' => date_format($date, 'l'),
+				'month' => date_format($date, 'F'),
+				'day' => date_format($date, 'd'),
+				'hour' => date_format($date, 'g'),
+				'minutes' => date_format($date, 'i'),
+				'meridiem' => date_format($date, 'A')
+
+			];
 		}
 
 		$title = $group['name'];
@@ -127,9 +154,12 @@ class Group {
 			'variables' => [
 				'group' => $group,
 				'user' => $user,
+				'activities' => $activities,
+				'category' => $category['name'],
 				'groupMembers' => $groupMembers,
 				'groupMemberCount' => $groupMemberCount,
-				'member' => $member
+				'member' => $member,
+				'loggedIn' => $this->authentication->isLoggedIn()
 			]
 		];
 	}

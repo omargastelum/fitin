@@ -14,6 +14,7 @@ class FitinRoutes implements \Ninja\Routes {
 		$this->activitiesTable = new \Ninja\DatabaseTable($pdo, 'activity', 'id');
 		$this->membershipsTable = new \Ninja\DatabaseTable($pdo, 'membership', 'groupid');
 		$this->categoriesTable = new \Ninja\DatabaseTable($pdo, 'category', 'id');
+		$this->eventUserTable = new \Ninja\DatabaseTable($pdo, 'event_user', 'id');
 		$this->authentication = new \Ninja\Authentication($this->usersTable, 'email', 'password');
     }
 
@@ -23,8 +24,9 @@ class FitinRoutes implements \Ninja\Routes {
 		$adminGroupController = new \Fitin\Controllers\Admin\Group($this->groupsTable, $this->usersTable, $this->authentication, $this->categoriesTable);
 		$adminUserController = new \Fitin\Controllers\Admin\User($this->usersTable, $this->groupsTable, $this->authentication);
 		$adminActivityController = new \Fitin\Controllers\Admin\Activity($this->activitiesTable, $this->groupsTable, $this->usersTable, $this->authentication);
-		$groupController = new \Fitin\Controllers\Group($this->groupsTable, $this->usersTable, $this->membershipsTable, $this->categoriesTable, $this->authentication);
+		$groupController = new \Fitin\Controllers\Group($this->groupsTable, $this->usersTable, $this->membershipsTable, $this->categoriesTable, $this->activitiesTable, $this->authentication);
 		$userController = new \Fitin\Controllers\Register($this->usersTable, $this->groupsTable, $this->membershipsTable, $this->authentication);
+		$activityController = new \Fitin\Controllers\Activity($this->activitiesTable, $this->groupsTable, $this->usersTable, $this->eventUserTable, $this->authentication);
 		$loginController = new \Fitin\Controllers\Login($this->authentication);
 
 		$routes = [
@@ -294,7 +296,34 @@ class FitinRoutes implements \Ninja\Routes {
 				],
 				'login' => true
 			],
-			
+			// ==========================================================================
+			// ACTIVITY
+			// ==========================================================================
+			'activity' => [
+				'GET' => [
+					'controller' => $activityController,
+					'action' => 'show'
+				],
+				'template' => 'layout.html.php'
+			],
+			// 5/23/21 OG NEW - This is the POST route that creates the many-to-many relationship between
+			// 					the user and the group. It calls the join method in the group controller.
+			'activity/join' => [
+				'POST' => [
+					'controller' => $activityController,
+					'action' => 'join'
+				],
+				'login' => true
+			],
+			// 5/23/21 OG NEW - This is the POST route that breaks the many-to-many relationship between
+			// 					the user and the group. It calls the leave method in the group controller.
+			'activity/leave' => [
+				'POST' => [
+					'controller' => $activityController,
+					'action' => 'leave'
+				],
+				'login' => true
+			],
 			// ==========================================================================
 			// STATIC PAGES
 			// ==========================================================================
