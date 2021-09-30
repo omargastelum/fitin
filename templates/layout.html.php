@@ -23,7 +23,7 @@
             <ul id="nav-list">
                 <?php if ($loggedIn): ?>
                     <li><a href="index.php?logout">Logout</a></li>
-                    <li><a href="#"><i class="fas fa-user"></i> <?=$user['firstname'] . ' ' . $user['lastname'] ?></a></li>
+                    <li><a href="index.php?user/profile?id=<?=$user['id']?>"><i class="fas fa-user"></i> <?=$user['firstname'] . ' ' . $user['lastname'] ?></a></li>
                 <?php else: ?>
                     <li><a href="index.php?login">Login</a></li>
                     <li><a href="index.php?user/register">Signup</a></li>
@@ -46,7 +46,7 @@
                 </li>
                 <?php if ($loggedIn && $user['permissions'] > 1): ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php?admin">Admin</a>
+                        <a class="nav-link" href="index.php?admin/groups">Admin</a>
                     </li>
                 <?php endif; ?>
             </ul>
@@ -92,10 +92,10 @@
                 </div>
                 <div class="link-list">
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Products</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="index.php?group/list">Groups</a></li>
+                        <li><a href="index.php?about">About</a></li>
+                        <li><a href="index.php?contact">Contact</a></li>
                     </ul>
                 </div>
             </div>

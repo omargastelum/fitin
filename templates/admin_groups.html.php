@@ -4,6 +4,12 @@
         <h1>Groups</h1>
         <!-- 5/23/21 OG NEW - Display the number of groups calculated in the controller -->
         <p>Total groups created: <?=$totalGroups?>
+        <!-- 5/23/21 OG NEW - if the user has author rights then display the create group button -->
+        <?php if ($loggedIn && $permissions >= 2): ?>
+            <div id="create-button-div" class="container">
+                <a href="index.php?group/create" id="create-group-button">Create a Group</a>
+            </div>
+        <?php endif; ?>
         <!-- 5/23/21 OG NEW - If the total amount of groups is greater than 0, display the table -->
         <?php if ($totalGroups > 0): ?>
             <table class="table table-sm table-striped table-hover">
@@ -47,11 +53,6 @@
             </tbody>
             </table>
         <?php endif; ?>
-        <!-- 5/23/21 OG NEW - if the user has author rights then display the create group button -->
-        <?php if ($loggedIn && $permissions >= 2): ?>
-            <div id="create-button-div" class="container">
-                <a href="index.php?group/create" id="create-group-button">Create a Group</a>
-            </div>
-        <?php endif; ?>
+        
     </div>
 </section>

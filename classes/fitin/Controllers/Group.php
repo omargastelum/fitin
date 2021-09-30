@@ -8,12 +8,12 @@ class Group {
 	private $groupsTable;
 
 	// 5/23/21 OG MOD - Added a memberships table to manage the many-to-many relationship between users and groups
-	public function __construct(DatabaseTable $groupsTable, DatabaseTable $usersTable, DatabaseTable $membershipTable, DatabaseTable $categoriesTable, DatabaseTable $activitiesTable, Authentication $authentication) {
+	public function __construct(DatabaseTable $groupsTable, DatabaseTable $usersTable, DatabaseTable $membershipTable, DatabaseTable $categoriesTable, DatabaseTable $eventsTable, Authentication $authentication) {
 		$this->groupsTable = $groupsTable;
 		$this->usersTable = $usersTable;
 		$this->membershipTable = $membershipTable;
 		$this->categoriesTable = $categoriesTable;
-		$this->activitiesTable = $activitiesTable;
+		$this->eventsTable = $eventsTable;
 		$this->authentication = $authentication;
 	}
 
@@ -103,7 +103,7 @@ class Group {
 	public function show() {
 		$group = $this->groupsTable->findById($_GET['id']);
 		$user = $this->usersTable->findById($group['userId']);
-		$activities_result = $this->activitiesTable->find('groupId', $group['id']);
+		$events_result = $this->eventsTable->find('groupId', $group['id']);
 		$activeUser = $this->authentication->getUser();
 		$category = $this->categoriesTable->findById($group['categoryId']);
 
@@ -125,17 +125,17 @@ class Group {
 			
 		}
 
-		// 2021-07-08 OG NEW - Format activity date
-		$activities = [];
+		// 2021-07-08 OG NEW - Format event date
+		$events = [];
 
-		foreach ($activities_result as $activity) {
+		foreach ($events_result as $event) {
 
-			$date = date_create($activity['date']);
+			$date = date_create($event['date']);
 
-			$activities[] = [
-				'id' => $activity['id'],
-				'name' => $activity['name'],
-				'description' => $activity['description'],
+			$events[] = [
+				'id' => $event['id'],
+				'name' => $event['name'],
+				'description' => $event['description'],
 				'dayOfWeek' => date_format($date, 'l'),
 				'month' => date_format($date, 'F'),
 				'day' => date_format($date, 'd'),
@@ -154,13 +154,13 @@ class Group {
 			'variables' => [
 				'group' => $group,
 				'user' => $user,
-				'activities' => $activities,
+				'events' => $events,
 				'category' => $category['name'],
 				'groupMembers' => $groupMembers,
 				'groupMemberCount' => $groupMemberCount,
 				'member' => $member,
 				'loggedIn' => $this->authentication->isLoggedIn()
-			]
+				]
 		];
 	}
 

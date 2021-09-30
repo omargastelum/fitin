@@ -23,7 +23,22 @@
             <p class="dim"><?=$user['email']?></p>
         </div>
         <div class="dashboard">
-            <h2>Navigation</h2>
+            <h2>Manage</h2>
+            <ul>
+                <?php if ($user['permissions'] > 1): ?>
+                    <li><a href="index.php?admin/groups"><i class="fa fa-users" aria-hidden="true"></i>
+                        Groups</a></li>
+                    <li><a href="index.php?admin/events"><i class="fa fa-calendar-o" aria-hidden="true"></i>
+                        Events</a></li>
+                <?php endif; ?>
+                <?php if ($user['permissions'] > 2): ?>
+                    <li><a href="index.php?admin/users"><i class="fa fa-user-plus" aria-hidden="true"></i>
+                        Users</a></li>
+                <?php endif; ?>
+            </ul>
+        </div>
+        <div class="dashboard">
+            <h2>Main Site</h2>
             <ul>
                 <li><a href="index.php"><i class="fa fa-home" aria-hidden="true"></i>
                     Home</a></li>
@@ -31,21 +46,6 @@
                     Groups</a></li>
                 <li><a href="index.php?logout"><i class="fa fa-sign-out" aria-hidden="true"></i>
                     Logout</a></li>
-            </ul>
-        </div>
-        <div class="dashboard">
-            <h2>Dashboard</h2>
-            <ul>
-                <?php if ($user['permissions'] > 1): ?>
-                    <li><a href="index.php?admin/groups"><i class="fa fa-users" aria-hidden="true"></i>
-                        Groups</a></li>
-                    <li><a href="index.php?admin/activities"><i class="fa fa-calendar-o" aria-hidden="true"></i>
-                        Activities</a></li>
-                <?php endif; ?>
-                <?php if ($user['permissions'] > 2): ?>
-                    <li><a href="index.php?admin/users"><i class="fa fa-user-plus" aria-hidden="true"></i>
-                        Users</a></li>
-                <?php endif; ?>
             </ul>
         </div>
     </div>

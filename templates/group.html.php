@@ -7,7 +7,7 @@
             <div class="container">
                 <h1><?=$group['name']?></h1>
                 <div class="group-info">
-                    <p>Last activity: 8 days ago</p>
+                    <p>Last event: 8 days ago</p>
                     <p><?=$groupMemberCount?> Members</p>
                 </div>
                 <p class="description"><?=$group['description']?></p>
@@ -21,24 +21,24 @@
                 <?php endif; ?>
             </div>
         </div>
-        <div id="activities" class="card card-large">
+        <div id="events" class="card card-large">
             <div class="container">
-                <h4>UPCOMING ACTIVITIES</h4>
+                <h4>UPCOMING EVENTS</h4>
                 <?php if ($member): ?>
-                    <?php foreach($activities as $activity): ?>
+                    <?php foreach($events as $event): ?>
                         <div class="card card-flat card-wide">
                             <div class="row">
                                 <img src="images/hero/<?=$category?>.jpg" alt="">
                                 <div class="card-details">
-                                    <p class="card-heading"><?=strtoupper($activity['dayOfWeek'])?>, <?=strtoupper($activity['month'])?> <?=strtoupper($activity['day'])?> @ <?=$activity['hour']?>:<?=$activity['minutes']?> <?=$activity['meridiem']?></p>
-                                    <p><a href="index.php?activity?id=<?=$activity['id']?>"><?=$activity['name']?></a></p>
+                                    <p class="card-heading"><?=strtoupper($event['dayOfWeek'])?>, <?=strtoupper($event['month'])?> <?=strtoupper($event['day'])?> @ <?=$event['hour']?>:<?=$event['minutes']?> <?=$event['meridiem']?></p>
+                                    <p><a href="index.php?event?id=<?=$event['id']?>"><?=$event['name']?></a></p>
                                     <p><?=$group['name']?> - <?=$group['city']?> <?=$group['state']?></p>
                                 </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p>Join group to see upcoming activities.</p>
+                    <p>Join group to see upcoming events.</p>
                 <?php endif; ?>
             </div>
         </div>
@@ -52,7 +52,7 @@
                         <div class="card card-flat">
                             <div class="row">
                                 <img src="images/users/<?=$groupMember['image']?>" height="50px" width="50px" alt="">
-                                <a href="profile.html"><?=$groupMember['firstname']?> <?=$groupMember['lastname']?></a>
+                                <a href="index.php?user/profile?id=<?=$groupMember['id']?>"><?=$groupMember['firstname']?> <?=$groupMember['lastname']?></a>
                             </div>
                         </div>
                     </div>

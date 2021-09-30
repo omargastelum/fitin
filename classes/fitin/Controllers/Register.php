@@ -6,10 +6,11 @@ use \Ninja\Authentication;
 class Register {
 	private $usersTable;
 
-	public function __construct(DatabaseTable $usersTable, DatabaseTable $groupsTable, DatabaseTable $membershipsTable,  Authentication $authentication) {
+	public function __construct(DatabaseTable $usersTable, DatabaseTable $groupsTable, DatabaseTable $membershipsTable, DatabaseTable $categoriesTable,  Authentication $authentication) {
 		$this->usersTable = $usersTable;
 		$this->groupsTable = $groupsTable;
 		$this->membershipsTable = $membershipsTable;
+		$this->categoriesTable = $categoriesTable;
 		$this->authentication = $authentication;
 	}
 
@@ -284,8 +285,13 @@ class Register {
 		$groups = [];
 		foreach ($memberships as $membership) {
 			$group = $this->groupsTable->findById($membership['groupid']);
+
+			$category = $this->categoriesTable->findById($group['categoryId']);
+
 			$groups[] = [
-				'name' => $group['name']
+				'id' => $group['id'],
+				'name' => $group['name'],
+				'category' => $category['name']
 			];
 
 		}
@@ -293,10 +299,20 @@ class Register {
 		if (isset($_GET['id'])) {
 			$user = $this->usersTable->findById($_GET['id']);
 
-			if (($user['id'] != $activeUser['id']) && $activeUser['permissions'] < 3) {
-				return;
-			}
+			// if (($user['id'] != $activeUser['id']) && $activeUser['permissions'] < 3) {
+			// 	return;
+			// }
 		}
+
+		$date = date_create($user['date']);
+
+		$user['dayOfWeek'] = date_format($date, 'l');
+		$user['month'] = date_format($date, 'F');
+		$user['day'] = date_format($date, 'd');
+		$user['year'] = date_format($date, 'Y');
+		$user['hour'] = date_format($date, 'g');
+		$user['minutes'] = date_format($date, 'i');
+		$user['meridiem'] = date_format($date, 'A');
 
 		$title = 'Profile';
 

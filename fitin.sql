@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 07, 2021 at 04:22 PM
+-- Generation Time: Sep 08, 2021 at 03:52 AM
 -- Server version: 10.4.16-MariaDB
 -- PHP Version: 7.4.12
 
@@ -40,6 +40,52 @@ INSERT INTO `category` (`id`, `name`) VALUES
 (6, 'yoga'),
 (7, 'bootcamp'),
 (10, 'meditation');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event`
+--
+
+CREATE TABLE `event` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `date` datetime NOT NULL,
+  `groupId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `event`
+--
+
+INSERT INTO `event` (`id`, `name`, `description`, `date`, `groupId`, `userId`) VALUES
+(1, 'Sunday Stretch', 'Come and do a light stretch with us!', '2021-07-11 10:46:46', 71, 44),
+(2, 'General Session', 'Come and do a well rounded session.', '2021-07-12 19:00:00', 71, 44),
+(5, 'Mindful Session', 'A mindful meditation session focused on gratitude.', '2021-07-24 17:00:00', 72, 44),
+(6, 'Youth Meditation Lesson', 'This session will focus on ages 4-6 years old. It will consist of introductory concepts and practice.', '2021-07-11 08:00:00', 73, 44);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event_user`
+--
+
+CREATE TABLE `event_user` (
+  `id` int(11) NOT NULL,
+  `eventid` int(11) NOT NULL,
+  `userid` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `event_user`
+--
+
+INSERT INTO `event_user` (`id`, `eventid`, `userid`) VALUES
+(9, 1, 43),
+(10, 6, 44),
+(12, 1, 44);
 
 -- --------------------------------------------------------
 
@@ -88,8 +134,12 @@ CREATE TABLE `membership` (
 --
 
 INSERT INTO `membership` (`id`, `userid`, `groupid`) VALUES
-(87, 44, 71),
-(94, 43, 71);
+(96, 44, 71),
+(97, 44, 72),
+(100, 43, 73),
+(101, 43, 71),
+(102, 44, 73),
+(103, 44, 75);
 
 -- --------------------------------------------------------
 
@@ -105,17 +155,18 @@ CREATE TABLE `user` (
   `password` varchar(255) DEFAULT NULL,
   `permissions` int(11) DEFAULT NULL,
   `zipcode` int(11) DEFAULT NULL,
-  `image` varchar(255) DEFAULT NULL
+  `image` varchar(255) DEFAULT NULL,
+  `date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `password`, `permissions`, `zipcode`, `image`) VALUES
-(43, 'Jemain', 'Clement', 'jemainclement@fitin.com', '$2y$10$Igv63YnScQTvJnetG8Tl5.wKY.GeS.lVvElluNAg0/zQCM4ekCXgu', 3, 91786, 'jemain-clement.jpg'),
-(44, 'Bret', 'McKenzie', 'bretmckenzie@fitin.com', '$2y$10$9NGRUYT.rg53PTwB3ZqsEOyxfVTGDS4e4o3l8HqArJJJMNQpRqK.i', 2, 91786, 'bret-mckenzie.jpg'),
-(46, 'Mel', 'Fan', 'melfan@fitin.com', '$2y$10$Zpn3psoMOC2rFo/bb2j19OScfQEy2HR3sPrnI.9zS4P/GKAVMOYEK', 1, 91733, 'mel_fan.jpg');
+INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `password`, `permissions`, `zipcode`, `image`, `date`) VALUES
+(43, 'Jemain', 'Clement', 'jemainclement@fitin.com', '$2y$10$Igv63YnScQTvJnetG8Tl5.wKY.GeS.lVvElluNAg0/zQCM4ekCXgu', 3, 91786, 'jemain-clement.jpg', '2021-07-24 05:14:55'),
+(44, 'Bret', 'McKenzie', 'bretmckenzie@fitin.com', '$2y$10$9NGRUYT.rg53PTwB3ZqsEOyxfVTGDS4e4o3l8HqArJJJMNQpRqK.i', 2, 91786, 'bret-mckenzie.jpg', '2021-07-24 05:14:55'),
+(46, 'Mel', 'Fan', 'melfan@fitin.com', '$2y$10$Zpn3psoMOC2rFo/bb2j19OScfQEy2HR3sPrnI.9zS4P/GKAVMOYEK', 1, 91733, 'mel_fan.jpg', '2021-07-24 05:14:55');
 
 --
 -- Indexes for dumped tables
@@ -126,6 +177,22 @@ INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `password`, `permiss
 --
 ALTER TABLE `category`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `event`
+--
+ALTER TABLE `event`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `groupId` (`groupId`),
+  ADD KEY `userId` (`userId`);
+
+--
+-- Indexes for table `event_user`
+--
+ALTER TABLE `event_user`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `eventid` (`eventid`),
+  ADD KEY `userid` (`userid`);
 
 --
 -- Indexes for table `group`
@@ -161,16 +228,28 @@ ALTER TABLE `category`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
+-- AUTO_INCREMENT for table `event`
+--
+ALTER TABLE `event`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `event_user`
+--
+ALTER TABLE `event_user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
 -- AUTO_INCREMENT for table `group`
 --
 ALTER TABLE `group`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT for table `membership`
 --
 ALTER TABLE `membership`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -181,6 +260,20 @@ ALTER TABLE `user`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `event`
+--
+ALTER TABLE `event`
+  ADD CONSTRAINT `event_ibfk_1` FOREIGN KEY (`groupId`) REFERENCES `group` (`id`),
+  ADD CONSTRAINT `event_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `user` (`id`);
+
+--
+-- Constraints for table `event_user`
+--
+ALTER TABLE `event_user`
+  ADD CONSTRAINT `event_user_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `event_user_ibfk_2` FOREIGN KEY (`eventid`) REFERENCES `event` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `group`

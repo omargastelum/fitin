@@ -11,7 +11,7 @@ class FitinRoutes implements \Ninja\Routes {
 
         $this->groupsTable = new \Ninja\DatabaseTable($pdo, 'group', 'id');
 		$this->usersTable = new \Ninja\DatabaseTable($pdo, 'user', 'id');
-		$this->activitiesTable = new \Ninja\DatabaseTable($pdo, 'activity', 'id');
+		$this->activitiesTable = new \Ninja\DatabaseTable($pdo, 'event', 'id');
 		$this->membershipsTable = new \Ninja\DatabaseTable($pdo, 'membership', 'groupid');
 		$this->categoriesTable = new \Ninja\DatabaseTable($pdo, 'category', 'id');
 		$this->eventUserTable = new \Ninja\DatabaseTable($pdo, 'event_user', 'id');
@@ -23,10 +23,10 @@ class FitinRoutes implements \Ninja\Routes {
 		$adminHomeController = new \Fitin\Controllers\Admin\Home();
 		$adminGroupController = new \Fitin\Controllers\Admin\Group($this->groupsTable, $this->usersTable, $this->authentication, $this->categoriesTable);
 		$adminUserController = new \Fitin\Controllers\Admin\User($this->usersTable, $this->groupsTable, $this->authentication);
-		$adminActivityController = new \Fitin\Controllers\Admin\Activity($this->activitiesTable, $this->groupsTable, $this->usersTable, $this->authentication);
+		$adminEventController = new \Fitin\Controllers\Admin\Event($this->activitiesTable, $this->groupsTable, $this->usersTable, $this->authentication);
 		$groupController = new \Fitin\Controllers\Group($this->groupsTable, $this->usersTable, $this->membershipsTable, $this->categoriesTable, $this->activitiesTable, $this->authentication);
-		$userController = new \Fitin\Controllers\Register($this->usersTable, $this->groupsTable, $this->membershipsTable, $this->authentication);
-		$activityController = new \Fitin\Controllers\Activity($this->activitiesTable, $this->groupsTable, $this->usersTable, $this->eventUserTable, $this->authentication);
+		$userController = new \Fitin\Controllers\Register($this->usersTable, $this->groupsTable, $this->membershipsTable, $this->categoriesTable, $this->authentication);
+		$eventController = new \Fitin\Controllers\Event($this->activitiesTable, $this->groupsTable, $this->usersTable, $this->eventUserTable, $this->authentication);
 		$loginController = new \Fitin\Controllers\Login($this->authentication);
 
 		$routes = [
@@ -51,6 +51,13 @@ class FitinRoutes implements \Ninja\Routes {
 					'action' => 'success'
 				],
 				'template' => 'registersuccess.html.php'
+			],
+			'user/profile' => [
+				'GET' => [
+					'controller' => $userController,
+					'action' => 'profile'
+				],
+				'template' => 'layout.html.php'
 			],
 
 			// ==========================================================================
@@ -167,43 +174,43 @@ class FitinRoutes implements \Ninja\Routes {
 			// ==========================================================================
 			// ADMIN - ACTIVITIES
 			// ==========================================================================
-			'admin/activities' => [
+			'admin/events' => [
 				'GET' => [
-					'controller' => $adminActivityController,
+					'controller' => $adminEventController,
 					'action' => 'list'
 				],
 				'template' => 'admin_layout.html.php',
 				'login' => true,
 				'admin' => true
 			],
-			'activity/create' => [
+			'event/create' => [
 				'POST' => [
-					'controller' => $adminActivityController,
+					'controller' => $adminEventController,
 					'action' => 'saveEdit'
 				],
 				'GET' => [
-					'controller' => $adminActivityController,
+					'controller' => $adminEventController,
 					'action' => 'showForm'
 				],
 				'template' => 'admin_layout.html.php',
 				'login' => true,
 				'admin' => true
 			],
-			'activity/edit' => [
+			'event/edit' => [
 				'POST' => [
-					'controller' => $adminActivityController,
+					'controller' => $adminEventController,
 					'action' => 'edit'
 				],
 				'GET' => [
-					'controller' => $adminActivityController,
+					'controller' => $adminEventController,
 					'action' => 'edit'
 				],
 				'login' => true,
 				'admin' => true
 			],
-			'activity/delete' => [
+			'event/delete' => [
 				'POST' => [
-					'controller' => $adminActivityController,
+					'controller' => $adminEventController,
 					'action' => 'delete'
 				],
 				'login' => true,
@@ -294,32 +301,33 @@ class FitinRoutes implements \Ninja\Routes {
 					'controller' => $userController,
 					'action' => 'profile'
 				],
-				'login' => true
+				'login' => true,
+				'template' => 'layout.html.php'
 			],
 			// ==========================================================================
-			// ACTIVITY
+			// event
 			// ==========================================================================
-			'activity' => [
+			'event' => [
 				'GET' => [
-					'controller' => $activityController,
+					'controller' => $eventController,
 					'action' => 'show'
 				],
 				'template' => 'layout.html.php'
 			],
 			// 5/23/21 OG NEW - This is the POST route that creates the many-to-many relationship between
 			// 					the user and the group. It calls the join method in the group controller.
-			'activity/join' => [
+			'event/join' => [
 				'POST' => [
-					'controller' => $activityController,
+					'controller' => $eventController,
 					'action' => 'join'
 				],
 				'login' => true
 			],
 			// 5/23/21 OG NEW - This is the POST route that breaks the many-to-many relationship between
 			// 					the user and the group. It calls the leave method in the group controller.
-			'activity/leave' => [
+			'event/leave' => [
 				'POST' => [
-					'controller' => $activityController,
+					'controller' => $eventController,
 					'action' => 'leave'
 				],
 				'login' => true

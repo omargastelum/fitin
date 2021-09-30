@@ -7,18 +7,18 @@
                 <div class="card card-large">
                     <div class="container">
                         <img src="images/hero/bootcamp.jpg" height="100px" width="100px" alt="">
-                        <h1><?=$activity['name']?> | <?=$group['name']?></h1>
+                        <h1><?=$event['name']?> | <?=$group['name']?></h1>
                         <div class="card-details">
-                            <p><?=strtoupper($activity['dayOfWeek'])?>, <?=strtoupper($activity['month'])?> <?=strtoupper($activity['day'])?> @ <?=$activity['hour']?>:<?=$activity['minutes']?> <?=$activity['meridiem']?></p>
+                            <p><?=strtoupper($event['dayOfWeek'])?>, <?=strtoupper($event['month'])?> <?=strtoupper($event['day'])?> @ <?=$event['hour']?>:<?=$event['minutes']?> <?=$event['meridiem']?></p>
                         </div>
                         <div class="card-description">
-                            <h4>ACTIVITY</h4>
-                            <p><?=$activity['description']?></p>
+                            <h4>Event</h4>
+                            <p><?=$event['description']?></p>
                         </div>
                         <?php if ($attending): ?>
-                            <button id="<?=$activity['id']?>" value="Leave" class="btn btn-complementary btn-action">Leave</button>
+                            <button id="<?=$event['id']?>" value="Leave" class="btn btn-complementary btn-action">Leave</button>
                         <?php else: ?>
-                            <button id="<?=$activity['id']?>" value="Join" class="btn btn-complementary btn-action">Join</button>
+                            <button id="<?=$event['id']?>" value="Join" class="btn btn-complementary btn-action">Join</button>
                         <?php endif; ?>
                     </div>
                 </div>

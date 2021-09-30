@@ -22,7 +22,7 @@ function eventUser() {
                         button.value = "Leave";
                     }
                 };
-                xmlhttp.open("POST", "index.php?activity/join", true);
+                xmlhttp.open("POST", "index.php?event/join", true);
                 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xmlhttp.send(params);
             } else {
@@ -33,7 +33,7 @@ function eventUser() {
                         button.value = "Join";
                     }
                 };
-                xmlhttp.open("POST", "index.php?activity/leave", true);
+                xmlhttp.open("POST", "index.php?event/leave", true);
                 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xmlhttp.send(params);
             }

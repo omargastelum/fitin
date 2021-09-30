@@ -4,9 +4,9 @@
     use \Ninja\DatabaseTable;
     use \Ninja\Authentication;
 
-    class Activity {
-        public function __construct(DatabaseTable $activitiesTable, DatabaseTable $groupsTable, DatabaseTable $usersTable, DatabaseTable $eventUserTable, Authentication $authentication) {
-            $this->activitiesTable = $activitiesTable;
+    class Event {
+        public function __construct(DatabaseTable $eventsTable, DatabaseTable $groupsTable, DatabaseTable $usersTable, DatabaseTable $eventUserTable, Authentication $authentication) {
+            $this->eventsTable = $eventsTable;
             $this->groupsTable = $groupsTable;
             $this->usersTable = $usersTable;
             $this->eventUserTable = $eventUserTable;
@@ -15,20 +15,20 @@
 
         public function show() {
             $activeUser = $this->authentication->getUser();
-            $activity = $this->activitiesTable->findById($_GET['id']);
-            $group = $this->groupsTable->findById($activity['groupId']);
-            $date = date_create($activity['date']);
+            $event = $this->eventsTable->findById($_GET['id']);
+            $group = $this->groupsTable->findById($event['groupId']);
+            $date = date_create($event['date']);
             $attendees = [];
             $attending = false;
 
-            $activity['dayOfWeek'] = date_format($date, 'l');
-            $activity['month'] = date_format($date, 'F');
-            $activity['day'] = date_format($date, 'd');
-            $activity['hour'] = date_format($date, 'g');
-            $activity['minutes'] = date_format($date, 'i');
-            $activity['meridiem'] = date_format($date, 'A');
+            $event['dayOfWeek'] = date_format($date, 'l');
+            $event['month'] = date_format($date, 'F');
+            $event['day'] = date_format($date, 'd');
+            $event['hour'] = date_format($date, 'g');
+            $event['minutes'] = date_format($date, 'i');
+            $event['meridiem'] = date_format($date, 'A');
 
-            $eventAttendees = $this->eventUserTable->find('activityid', $activity['id']);
+            $eventAttendees = $this->eventUserTable->find('eventid', $event['id']);
 
             foreach ($eventAttendees as $eventAttendee) {
                 $attendee = $this->usersTable->findById($eventAttendee['userid']);
@@ -40,10 +40,10 @@
             }
 
             return [
-                'template' => 'activity.html.php',
-                'title' => 'Activity',
+                'template' => 'event.html.php',
+                'title' => 'event',
                 'variables' => [
-                    'activity' => $activity,
+                    'event' => $event,
                     'group' => $group,
                     'attendees' => $attendees,
                     'attending' => $attending
@@ -56,11 +56,11 @@
             // Get current active user
             $activeUser = $this->authentication->getUser();
             // Get the group id from the groups page
-            $activity = $_POST['id'];
+            $event = $_POST['id'];
 
             // Set the memberships array that will build the relationship between the group and the user
             $eventUser['userid'] = $activeUser['id'];
-            $eventUser['activityid'] = $activity;
+            $eventUser['eventid'] = $event;
 
             // save it and redirect to group list
             $this->eventUserTable->save($eventUser);
@@ -76,10 +76,10 @@
             $activeUser = $this->authentication->getUser();
 
             // Get the group that was clicked on
-            $activity = $this->activitiesTable->findById($_POST['id']);
+            $event = $this->eventsTable->findById($_POST['id']);
 
             // Delete the relationship from the membership table and redirect to group list
-            $this->eventUserTable->deleteFromLookup('activityid', 'userid', $activity['id'], $activeUser['id']);
+            $this->eventUserTable->deleteFromLookup('eventid', 'userid', $event['id'], $activeUser['id']);
 
             echo header('location: index.php?group/list');
         }

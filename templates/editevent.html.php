@@ -3,18 +3,18 @@
         <h1>Activities</h1>
         <?php if (empty($group['id']) || $userId == $group['userId'] || $permissions == 3): ?>
 
-            <form action="index.php?activity/create" method="post">
+            <form action="index.php?event/create" method="post">
                 <div class="form-group">
-                    <label for="name">Activity Name</label>
-                    <input type="text" class="form-control" id="name" name="activity[name]" placeholder="Enter activity name">
+                    <label for="name">Event Name</label>
+                    <input type="text" class="form-control" id="name" name="event[name]" placeholder="Enter event name">
                 </div>
                 <div class="form-group">
                     <label for="desctiption">Description</label>
-                    <textarea class="form-control" id="description" name="activity[description]" placeholder="Description"></textarea>
+                    <textarea class="form-control" id="description" name="event[description]" placeholder="Description"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Group</label>
-                    <select class="form-control" id="exampleFormControlSelect1" name="activity[groupId]">
+                    <select class="form-control" id="exampleFormControlSelect1" name="event[groupId]">
                         <option>Choose a group:</option>
                         <?php foreach ($groups as $group): ?>
                             <option value="<?=$group['id']?>"><?=$group['name']?></option>
@@ -22,12 +22,12 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="date">Activity Date:</label><br>
-                    <input type="date" id="date" name="activity[date]">
+                    <label for="date">Event Date:</label><br>
+                    <input type="date" id="date" name="event[date]">
                 </div>
                 <div class="form-group">
-                    <label for="time">Activity Date:</label><br>
-                    <input type="time" id="time" name="activity[time]">
+                    <label for="time">Event Date:</label><br>
+                    <input type="time" id="time" name="event[time]">
                 </div>
                 <button type="submit" name="submit" class="btn btn-primary">Save</button>
             </form>

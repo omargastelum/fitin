@@ -4,52 +4,52 @@
     use Ninja\DatabaseTable;
     use \Ninja\Authentication;
 
-    class Activity {
-        public function __construct(DatabaseTable $activitiesTable, DatabaseTable $groupsTable, DatabaseTable $usersTable, Authentication $authentication) {
-            $this->activitiesTable = $activitiesTable;
+    class Event {
+        public function __construct(DatabaseTable $eventsTable, DatabaseTable $groupsTable, DatabaseTable $usersTable, Authentication $authentication) {
+            $this->eventsTable = $eventsTable;
             $this->groupsTable = $groupsTable;
             $this->usersTable = $usersTable;
             $this->authentication = $authentication;
         }
 
         public function list() {
-            $results = $this->activitiesTable->findAll();
+            $results = $this->eventsTable->findAll();
             $activeUser = $this->authentication->getUser();
-            $totalActivities = 0;
+            $totalEvents = 0;
 
-            $activities = [];
-            foreach ($results as $activity) {
-                $group = $this->groupsTable->findById($activity['groupId']);
+            $events = [];
+            foreach ($results as $event) {
+                $group = $this->groupsTable->findById($event['groupId']);
                 $user = $this->usersTable->findById($group['userId']);
 
 
-                $activities[] = [
-                    'id' => $activity['id'],
-                    'name' => $activity['name'],
-                    'description' => $activity['description'],
-                    'date' => $activity['date'],
-                    'userId' => $activity['userId'],
+                $events[] = [
+                    'id' => $event['id'],
+                    'name' => $event['name'],
+                    'description' => $event['description'],
+                    'date' => $event['date'],
+                    'userId' => $event['userId'],
                     'group_name' => $group['name'],
                     'creator' => $user['firstname'] .' '. $user['lastname']
                 ];
 
-                // 5/23/21 OG NEW - Count the activities that belong to the active user
-                if ($activeUser['id'] == $activity['userId']) {
-                    $totalActivities++;
+                // 5/23/21 OG NEW - Count the events that belong to the active user
+                if ($activeUser['id'] == $event['userId']) {
+                    $totalEvents++;
                 }
             }
 
-            $title = 'Activities';
+            $title = 'Events';
 
             if ($activeUser['permissions'] > 2) {
-                $totalActivities = $this->activitiesTable->total();
+                $totalEvents = $this->eventsTable->total();
             }
 
-            return ['template' => 'admin_activities.html.php', 
+            return ['template' => 'admin_events.html.php', 
                     'title' => $title, 
                     'variables' => [
-                            'totalActivities' => $totalActivities,
-                            'activities' => $activities,
+                            'totalEvents' => $totalEvents,
+                            'events' => $events,
                             'userId' => $activeUser['id'] ?? null,
                             'permissions' => $activeUser['permissions'] ?? null,
                             'loggedIn' => $this->authentication->isLoggedIn()
@@ -62,8 +62,8 @@
 
             $groups = $this->groupsTable->find('userId', $user['id']);
 
-            $title = 'Create Activity';
-            return ['template' => 'editactivity.html.php',
+            $title = 'Create Event';
+            return ['template' => 'editevent.html.php',
                     'title' => $title,
                     'variables' => [
                         'userId' => $user['id'] ?? null,
@@ -78,21 +78,21 @@
             $activeUser = $this->authentication->getUser();
     
             if (isset($_GET['id'])) {
-                $activity = $this->activitiesTable->findById($_GET['id']);
+                $event = $this->eventsTable->findById($_GET['id']);
     
-                if ($activity['userId'] != $activeUser['id']) {
+                if ($event['userId'] != $activeUser['id']) {
                     return;
                 }
             }
     
-            $activity = $_POST['activity'];
-            $activity['date'] = $activity['date'] . ' ' . $activity['time'];
-            unset($activity['time']);
-            $activity['userId'] = $activeUser['id'];
+            $event = $_POST['event'];
+            $event['date'] = $event['date'] . ' ' . $event['time'];
+            unset($event['time']);
+            $event['userId'] = $activeUser['id'];
     
-            $this->activitiesTable->save($activity);
+            $this->eventsTable->save($event);
             //header('location: /group/list'); 5/25/18 JG DEL1L  org
-            header('location: index.php?admin/activities');  //5/25/18 JG NEW1L  
+            header('location: index.php?admin/events');  //5/25/18 JG NEW1L  
         }
 
         public function edit() {
@@ -101,21 +101,21 @@
                 $_POST['field'] => $_POST['value']
             ];
     
-            $this->activitiesTable->save($updated);
+            $this->eventsTable->save($updated);
         }
 
         public function delete() {
             // 5/23/21 OG NEW - Get active user
             $activeUser = $this->authentication->getUser();
-            // 5/23/21 OG NEW - Find the activity that needs to be deleted
-            $activity = $this->activitiesTable->findById($_POST['id']);
+            // 5/23/21 OG NEW - Find the event that needs to be deleted
+            $event = $this->eventsTable->findById($_POST['id']);
             // 5/23/21 OG NEW - If the active user is not the creator and does not have rights then do not proceed to delete
-            if ($activity['userId'] != $activeUser['id'] && $activeUser['permissions'] < 3) {
+            if ($event['userId'] != $activeUser['id'] && $activeUser['permissions'] < 3) {
                 return;
             }
             
-            // 5/23/21 OG NEW - else delete the activity and redirect to admin activities page
-            $this->activitiesTable->delete($_POST['id']);
-            header('location: index.php?admin/activities');  // 5/25/18 JG NEW1L  		
+            // 5/23/21 OG NEW - else delete the event and redirect to admin events page
+            $this->eventsTable->delete($_POST['id']);
+            header('location: index.php?admin/events');  // 5/25/18 JG NEW1L  		
         }
     }
