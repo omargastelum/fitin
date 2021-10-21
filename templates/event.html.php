@@ -31,7 +31,7 @@
                                     <div class="card card-flat">
                                         <div class="row">
                                             <img src="images/users/<?=$attendee['image']?>" height="50px" width="50px" alt="">
-                                            <a href="profile.html"><?=$attendee['firstname']?> <?=$attendee['lastname']?></a>
+                                            <a href="index.php?user/profile?id=<?=$attendee['id']?>"><?=$attendee['firstname']?> <?=$attendee['lastname']?></a>
                                         </div>
                                     </div>
                                 </div>

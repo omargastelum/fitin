@@ -88,7 +88,7 @@ function createCards(info, elementId) {
                                     '<button id="' + info['groups'][i]['id'] + '" value="Leave" class="btn btn-success btn-block btn-action">Leave</button>'+
                                 '</div>';
             } else {
-                markupString += '<div class="card-button active">'+
+                markupString += '<div class="card-button">'+
                                     '<button id="' + info['groups'][i]['id'] + '" value="Join" class="btn btn-primary btn-block btn-action">Join</button>'+
                                 '</div>';
             }

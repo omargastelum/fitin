@@ -11,7 +11,7 @@
                     <p><?=$groupMemberCount?> Members</p>
                 </div>
                 <p class="description"><?=$group['description']?></p>
-                <p>Group Administrator: <a href="profile.html"><?=$user['firstname']?> <?=$user['lastname']?></a></p>
+                <p>Group Administrator: <a href="index.php?user/profile?id=<?=$group['userId']?>"><?=$user['firstname']?> <?=$user['lastname']?></a></p>
                 <?php if ($loggedIn): ?>
                     <?php if ($member): ?>
                         <button id="<?=$group['id']?>" value="Leave" class="btn btn-complementary btn-action">Leave</button>

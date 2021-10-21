@@ -34,6 +34,9 @@ ul {
 #side-nav a:hover {
     color: var(--complementary);
 }
+/* #side-nav a:link .active {
+    color: #ED4593;
+} */
 #side-nav .header img {
     width: 28px;
 }
@@ -65,7 +68,7 @@ ul {
     font-weight: 300;
 }
 #side-nav .dashboard a.active {
-    color: var(--light);
+    color: #ED4593;
 }
 nav {
     height: 75px;

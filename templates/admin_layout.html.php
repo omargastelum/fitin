@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>FITIN - Admin</title>
+    <title>FITIN - Admin/<?=$title?></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A place to find local fitness groups">
@@ -26,13 +26,13 @@
             <h2>Manage</h2>
             <ul>
                 <?php if ($user['permissions'] > 1): ?>
-                    <li><a href="index.php?admin/groups"><i class="fa fa-users" aria-hidden="true"></i>
+                    <li><a href="index.php?admin/groups" class="<?php if ($title == "Groups") echo "active" ?>"><i class="fa fa-users" aria-hidden="true"></i>
                         Groups</a></li>
-                    <li><a href="index.php?admin/events"><i class="fa fa-calendar-o" aria-hidden="true"></i>
+                    <li><a href="index.php?admin/events" class="<?php if ($title == "Events") echo "active" ?>"><i class="fa fa-calendar-o" aria-hidden="true"></i>
                         Events</a></li>
                 <?php endif; ?>
                 <?php if ($user['permissions'] > 2): ?>
-                    <li><a href="index.php?admin/users"><i class="fa fa-user-plus" aria-hidden="true"></i>
+                    <li><a href="index.php?admin/users" class="<?php if ($title == "Users") echo "active" ?>"><i class="fa fa-user-plus" aria-hidden="true"></i>
                         Users</a></li>
                 <?php endif; ?>
             </ul>
