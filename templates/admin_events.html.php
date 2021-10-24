@@ -6,9 +6,33 @@
         <p>Total events created: <?=$totalEvents?>
         <!-- 5/23/21 OG NEW - if the user has author rights then display the create group button -->
         <?php if ($loggedIn && $permissions >= 2): ?>
-            <div id="create-button-div" class="container">
-                <a href="index.php?event/create" id="create-group-button">Create an event</a>
-            </div>
+            <table class="table table-sm table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Action</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">description</th>
+                    <th scope="col">Group</th>
+                    <th scope="col">Event Date</th>
+                    <th scope="col">Event Time</th>
+                </tr>
+            </thead>
+            <tbody id="createTable">
+                <tr>
+                    <td scope="row"><button id="create" class="createBtn btn btn-primary btn-sm">Save</button></td>
+                    <td scope="row"><input id="name" type="text" class="form-control"></td>
+                    <td scope="row"><input id="description" type="text" class="form-control"></td>
+                    <td><select id="groupId" class="form-control" id="exampleFormControlSelect1" name="event[groupId]">
+                    <option>Choose a group:</option>
+                        <?php foreach ($groups as $group): ?>
+                            <option value="<?=$group['id']?>"><?=$group['name']?></option>
+                        <?php endforeach; ?>
+                    </select></td>
+                    <td><input type="date" id="date" name="event[date]" class="form-control"></td>
+                    <td><input type="time" id="time" name="event[time]" class="form-control"></td>
+                </tr>
+            </tbody>
+            </table>
         <?php endif; ?>
         <!-- 5/23/21 OG NEW - If the total amount of groups is greater than 0, display the table -->
         <?php if ($totalEvents > 0): ?>
@@ -24,7 +48,7 @@
                     <th scope="col">Event Date</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
                 <!-- 5/23/21 OG NEW - For each group -->
                 <?php foreach($events as $event): ?>
                     <!-- 5/23/21 OG NEW - If user has admin rights, display all groups else only show only those that they created -->
@@ -32,11 +56,11 @@
                         <tr>
                         <td scope="row"><?=$event['id']?></td>
                         <td scope="row"><button id="deleteBtn-<?=$event['id']?>" class="deleteBtn btn btn-danger btn-sm">Delete</button></td>
-                        <td><div contenteditable="true" class="edit" id="name-<?=$event['id']?>"><?=$event['name']?></div></td>
-                        <td><div contenteditable="true" class="edit" id="description-<?=$event['id']?>"><?=$event['description']?></div></th>
-                        <td><div><?=$event['group_name']?></div></th>
-                        <td><div><?=$event['creator']?></div></th>
-                        <td><?=$event['date']?></td>
+                        <td class="editable"><div contenteditable="true" class="edit" id="name-<?=$event['id']?>"><?=$event['name']?></div></td>
+                        <td class="editable"><div contenteditable="true" class="edit" id="description-<?=$event['id']?>"><?=$event['description']?></div></th>
+                        <td><div id="group_name"><?=$event['group_name']?></div></th>
+                        <td><div id="creator"><?=$event['creator']?></div></th>
+                        <td><div id="date"><?=$event['date']?></div></td>
                         </tr>
                     <?php endif; ?>
                 <?php endforeach; ?>

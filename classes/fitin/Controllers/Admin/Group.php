@@ -16,6 +16,7 @@
             $result = $this->groupsTable->findAll();
             $activeUser = $this->authentication->getUser();
             $totalGroups = 0;
+            $categories = $this->categoriesTable->findAll();
     
             $groups = [];
             foreach ($result as $group) {
@@ -58,6 +59,7 @@
                     'variables' => [
                             'totalGroups' => $totalGroups,
                             'groups' => $groups,
+                            'categories' => $categories,
                             'userId' => $user['id'] ?? null,
                             'permissions' => $user['permissions'] ?? null,
                             'loggedIn' => $this->authentication->isLoggedIn()
@@ -93,13 +95,37 @@
                 }
             }
     
-            $group = $_POST['group'];
+            $group = $_POST;
             $group['date'] = new \DateTime();
             $group['userId'] = $activeUser['id'];
     
             $this->groupsTable->save($group);
-            //header('location: /group/list'); 5/25/18 JG DEL1L  org
-            header('location: index.php?admin/groups');  //5/25/18 JG NEW1L  
+            
+            $result = $this->groupsTable->findAll();
+            $groups = [];
+
+            foreach ($result as $group) {
+                $user = $this->usersTable->findById($group['userId']);
+                $category = $this->categoriesTable->findById($group['categoryId']);
+    
+                $groups[] = [
+                    'id' => $group['id'],
+                    'name' => $group['name'],
+                    'description' => $group['description'],
+                    'category' => $category['name'],
+                    'street' => $group['street'],
+                    'city' => $group['city'],
+                    'state' => $group['state'],
+                    'country' => $group['country'],
+                    'zipcode' => $group['zipcode'],
+                    'date' => $group['date'],
+                    'creator' => $user['firstname']. ' ' .$user['lastname'],
+                    'userId' => $group['userId']
+                ];
+            }
+
+            $json = json_encode($groups);
+            return $json; 
         }
 
         public function edit() {

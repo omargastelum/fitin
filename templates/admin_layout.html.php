@@ -35,6 +35,10 @@
                     <li><a href="index.php?admin/users" class="<?php if ($title == "Users") echo "active" ?>"><i class="fa fa-user-plus" aria-hidden="true"></i>
                         Users</a></li>
                 <?php endif; ?>
+                <?php if ($user['permissions'] > 2): ?>
+                    <li><a href="index.php?admin/categories" class="<?php if ($title == "Categories") echo "active" ?>"><i class="fas fa-stream" aria-hidden="true"></i>
+                        Categories</a></li>
+                <?php endif; ?>
             </ul>
         </div>
         <div class="dashboard">

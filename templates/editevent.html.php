@@ -1,6 +1,6 @@
 <section id="body">
     <div class="container">
-        <h1>Activities</h1>
+        <h1>Events</h1>
         <?php if (empty($group['id']) || $userId == $group['userId'] || $permissions == 3): ?>
 
             <form action="index.php?event/create" method="post">
@@ -26,7 +26,7 @@
                     <input type="date" id="date" name="event[date]">
                 </div>
                 <div class="form-group">
-                    <label for="time">Event Date:</label><br>
+                    <label for="time">Event Time:</label><br>
                     <input type="time" id="time" name="event[time]">
                 </div>
                 <button type="submit" name="submit" class="btn btn-primary">Save</button>

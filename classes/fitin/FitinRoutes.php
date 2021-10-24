@@ -24,6 +24,7 @@ class FitinRoutes implements \Ninja\Routes {
 		$adminGroupController = new \Fitin\Controllers\Admin\Group($this->groupsTable, $this->usersTable, $this->authentication, $this->categoriesTable);
 		$adminUserController = new \Fitin\Controllers\Admin\User($this->usersTable, $this->groupsTable, $this->authentication);
 		$adminEventController = new \Fitin\Controllers\Admin\Event($this->activitiesTable, $this->groupsTable, $this->usersTable, $this->authentication);
+		$adminCategoryController = new \Fitin\Controllers\Admin\Category($this->categoriesTable, $this->authentication);
 		$groupController = new \Fitin\Controllers\Group($this->groupsTable, $this->usersTable, $this->membershipsTable, $this->categoriesTable, $this->activitiesTable, $this->authentication);
 		$userController = new \Fitin\Controllers\Register($this->usersTable, $this->groupsTable, $this->membershipsTable, $this->categoriesTable, $this->authentication);
 		$eventController = new \Fitin\Controllers\Event($this->activitiesTable, $this->groupsTable, $this->usersTable, $this->eventUserTable, $this->authentication);
@@ -96,7 +97,7 @@ class FitinRoutes implements \Ninja\Routes {
 					'controller' => $adminGroupController,
 					'action' => 'showForm'
 				],
-				'template' => 'admin_layout.html.php',
+				'template' => '',
 				'login' => true,
 				'admin' => true
 			],
@@ -192,7 +193,7 @@ class FitinRoutes implements \Ninja\Routes {
 					'controller' => $adminEventController,
 					'action' => 'showForm'
 				],
-				'template' => 'admin_layout.html.php',
+				'template' => '',
 				'login' => true,
 				'admin' => true
 			],
@@ -211,6 +212,47 @@ class FitinRoutes implements \Ninja\Routes {
 			'event/delete' => [
 				'POST' => [
 					'controller' => $adminEventController,
+					'action' => 'delete'
+				],
+				'login' => true,
+				'admin' => true
+			],
+			// ==========================================================================
+			// ADMIN CATEGORIES
+			// ==========================================================================
+			'admin/categories' => [
+				'GET' => [
+					'controller' => $adminCategoryController,
+					'action' => 'list'
+				],
+				'template' => 'admin_layout.html.php',
+				'login' => true,
+				'admin' => true
+			],
+			'category/create' => [
+				'POST' => [
+					'controller' => $adminCategoryController,
+					'action' => 'saveEdit'
+				],
+				'template' => '',
+				'login' => true,
+				'admin' => true
+			],
+			'category/edit' => [
+				'POST' => [
+					'controller' => $adminCategoryController,
+					'action' => 'edit'
+				],
+				'GET' => [
+					'controller' => $adminCategoryController,
+					'action' => 'edit'
+				],
+				'login' => true,
+				'admin' => true
+			],
+			'category/delete' => [
+				'POST' => [
+					'controller' => $adminCategoryController,
 					'action' => 'delete'
 				],
 				'login' => true,

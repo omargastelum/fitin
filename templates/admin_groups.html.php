@@ -6,9 +6,39 @@
         <p>Total groups created: <?=$totalGroups?>
         <!-- 5/23/21 OG NEW - if the user has author rights then display the create group button -->
         <?php if ($loggedIn && $permissions >= 2): ?>
-            <div id="create-button-div" class="container">
-                <a href="index.php?group/create" id="create-group-button">Create a Group</a>
-            </div>
+            <table class="table table-sm table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Action</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">description</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Street</th>
+                    <th scope="col">City</th>
+                    <th scope="col">State</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">Zip Code</th>
+                </tr>
+            </thead>
+            <tbody id="createTable">
+                <tr>
+                <td scope="row"><button id="create" class="createBtn btn btn-primary btn-sm">Save</button></td>
+                <td scope="row"><input id="name" type="text" class="form-control"></td>
+                <td scope="row"><input id="description" type="text" class="form-control"></td>
+                <td><select id="categoryId" class="form-control" id="exampleFormControlSelect1" name="group[categoryId]">
+                <option>Choose a group:</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?=$category['id']?>"><?=$category['name']?></option>
+                    <?php endforeach; ?>
+                </select></td>
+                <td scope="row"><input id="street" type="text" class="form-control"></td>
+                <td scope="row"><input id="city" type="text" class="form-control"></td>
+                <td scope="row"><input id="state" type="text" class="form-control"></td>
+                <td scope="row"><input id="country" type="text" class="form-control"></td>
+                <td scope="row"><input id="zipcode" type="text" class="form-control"></td>
+                </tr>
+            </tbody>
+            </table>
         <?php endif; ?>
         <!-- 5/23/21 OG NEW - If the total amount of groups is greater than 0, display the table -->
         <?php if ($totalGroups > 0): ?>
@@ -29,7 +59,7 @@
                     <th scope="col">Date Created</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tableBody">
                 <!-- 5/23/21 OG NEW - For each group -->
                 <?php foreach($groups as $group): ?>
                     <!-- 5/23/21 OG NEW - If user has admin rights, display all groups else only show only those that they created -->
@@ -37,16 +67,16 @@
                         <tr>
                         <td scope="row"><?=$group['id']?></td>
                         <td scope="row"><button id="deleteBtn-<?=$group['id']?>" class="deleteBtn btn btn-danger btn-sm">Delete</button></td>
-                        <td><div contenteditable="true" class="edit" id="name-<?=$group['id']?>"><?=$group['name']?></div></td>
-                        <td><div contenteditable="true" class="edit" id="description-<?=$group['id']?>"><?=$group['description']?></div></th>
-                        <td><div><?=$group['creator']?></div></th>
-                        <td><div><?=$group['category']?></div></th>
-                        <td><div contenteditable="true" class="edit" id="street-<?=$group['id']?>"><?=$group['street']?></div></th>
-                        <td><div contenteditable="true" class="edit" id="city-<?=$group['id']?>"><?=$group['city']?></div></th>
-                        <td><div contenteditable="true" class="edit" id="state-<?=$group['id']?>"><?=$group['state']?></div></th>
-                        <td><div contenteditable="true" class="edit" id="country-<?=$group['id']?>"><?=$group['country']?></div></th>
-                        <td><div contenteditable="true" class="edit" id="zipcode-<?=$group['id']?>"><?=$group['zipcode']?></div></th>
-                        <td><?=$group['date']?></td>
+                        <td class="editable"><div contenteditable="true" class="edit" id="name-<?=$group['id']?>"><?=$group['name']?></div></td>
+                        <td class="editable"><div contenteditable="true" class="edit" id="description-<?=$group['id']?>"><?=$group['description']?></div></th>
+                        <td><div id="creator"><?=$group['creator']?></div></th>
+                        <td><div id="category"><?=$group['category']?></div></th>
+                        <td class="editable"><div contenteditable="true" class="edit" id="street-<?=$group['id']?>"><?=$group['street']?></div></th>
+                        <td class="editable"><div contenteditable="true" class="edit" id="city-<?=$group['id']?>"><?=$group['city']?></div></th>
+                        <td class="editable"><div contenteditable="true" class="edit" id="state-<?=$group['id']?>"><?=$group['state']?></div></th>
+                        <td class="editable"><div contenteditable="true" class="edit" id="country-<?=$group['id']?>"><?=$group['country']?></div></th>
+                        <td class="editable"><div contenteditable="true" class="edit" id="zipcode-<?=$group['id']?>"><?=$group['zipcode']?></div></th>
+                        <td><div id="date"><?=$group['date']?></div></td>
                         </tr>
                     <?php endif; ?>
                 <?php endforeach; ?>

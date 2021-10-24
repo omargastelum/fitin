@@ -45,11 +45,14 @@
                 $totalEvents = $this->eventsTable->total();
             }
 
+            $groups = $this->groupsTable->find('userId', $user['id']);
+
             return ['template' => 'admin_events.html.php', 
                     'title' => $title, 
                     'variables' => [
                             'totalEvents' => $totalEvents,
                             'events' => $events,
+                            'groups' => $groups,
                             'userId' => $activeUser['id'] ?? null,
                             'permissions' => $activeUser['permissions'] ?? null,
                             'loggedIn' => $this->authentication->isLoggedIn()
@@ -85,14 +88,33 @@
                 }
             }
     
-            $event = $_POST['event'];
+            $event = $_POST;
             $event['date'] = $event['date'] . ' ' . $event['time'];
             unset($event['time']);
             $event['userId'] = $activeUser['id'];
     
             $this->eventsTable->save($event);
-            //header('location: /group/list'); 5/25/18 JG DEL1L  org
-            header('location: index.php?admin/events');  //5/25/18 JG NEW1L  
+
+            $result = $this->eventsTable->findAll();
+            $events = [];
+
+            foreach ($result as $event) {
+                $group = $this->groupsTable->findById($event['groupId']);
+                $user = $this->usersTable->findById($group['userId']);
+
+                $events[] = [
+                    'id' => $event['id'],
+                    'name' => $event['name'],
+                    'description' => $event['description'],
+                    'date' => $event['date'],
+                    'userId' => $event['userId'],
+                    'group_name' => $group['name'],
+                    'creator' => $user['firstname'] .' '. $user['lastname']
+                ];
+            }
+
+            $json = json_encode($events);
+            return $json; 
         }
 
         public function edit() {

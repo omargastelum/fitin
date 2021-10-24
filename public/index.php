@@ -1,5 +1,6 @@
 <?php
 try {
+	error_reporting (E_ALL ^ E_NOTICE);
 	include __DIR__ . '/../includes/autoload.php';
 	
 	$route = ltrim(strtok($_SERVER['REQUEST_URI'], '?'), '/');
